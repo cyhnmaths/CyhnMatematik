@@ -1,4 +1,3 @@
-<script type="module">
 // 1. Firebase Modüllerinin İçe Aktarılması
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
@@ -11,7 +10,7 @@ import {
   onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// Firebase Ayarlarınız (Proje bilgilerinizi buraya ekleyin)
+// 2. Firebase Konfigürasyon Bilgileriniz
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_AUTH_DOMAIN",
@@ -24,14 +23,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// 2. Modal Açma / Kapama ve Form Değiştirme Fonksiyonları
+// 3. Modal ve Form Arayüz Yönetimi
 window.openAuthModal = function(mode) {
-  document.getElementById('auth-modal').classList.remove('hidden');
+  document.getElementById('auth-modal')?.classList.remove('hidden');
   window.switchAuthMode(mode);
 };
 
 window.closeAuthModal = function() {
-  document.getElementById('auth-modal').classList.add('hidden');
+  document.getElementById('auth-modal')?.classList.add('hidden');
 };
 
 window.switchAuthMode = function(mode) {
@@ -39,15 +38,17 @@ window.switchAuthMode = function(mode) {
   const registerForm = document.getElementById('register-form');
 
   if (mode === 'login') {
-    loginForm.classList.remove('hidden');
-    registerForm.classList.add('hidden');
+    loginForm?.classList.remove('hidden');
+    registerForm?.classList.add('hidden');
   } else {
-    loginForm.classList.add('hidden');
-    registerForm.classList.remove('hidden');
+    loginForm?.classList.add('hidden');
+    registerForm?.classList.remove('hidden');
   }
 };
 
-// 3. Hata / Bilgi Mesajı Gösterme Yardımcısı
+window.switchForm = window.switchAuthMode;
+
+// 4. Uyarı / Hata Kutusu Bildirimi
 function showAlert(containerId, message, type) {
   const alertBox = document.getElementById(containerId);
   if (alertBox) {
@@ -57,19 +58,19 @@ function showAlert(containerId, message, type) {
   }
 }
 
-// 4. Gerçek Firebase Oturum Takibi (Sayfa Yenilendiğinde Oturumu Korur)
+// 5. Firebase Oturum Takibi
 onAuthStateChanged(auth, (user) => {
   if (user) {
     window.closeAuthModal();
-    document.getElementById('landing-page').classList.add('hidden');
-    document.getElementById('dashboard').classList.remove('hidden');
+    document.getElementById('landing-page')?.classList.add('hidden');
+    document.getElementById('dashboard')?.classList.remove('hidden');
   } else {
-    document.getElementById('dashboard').classList.add('hidden');
-    document.getElementById('landing-page').classList.remove('hidden');
+    document.getElementById('dashboard')?.classList.add('hidden');
+    document.getElementById('landing-page')?.classList.remove('hidden');
   }
 });
 
-// 5. Kayıt İşlemi (E-posta, Kullanıcı Adı, Şifre)
+// 6. Kayıt Olma Fonksiyonu
 window.handleRegister = async function(event) {
   event.preventDefault();
   const email = document.getElementById('regEmail').value;
@@ -83,6 +84,7 @@ window.handleRegister = async function(event) {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(userCredential.user, { displayName: username });
+    showAlert('registerAlert', 'Kayıt başarılı! Yönlendiriliyorsunuz...', 'success');
   } catch (error) {
     console.error("Kayıt hatası:", error);
     let msg = "Kayıt sırasında bir hata oluştu!";
@@ -96,7 +98,7 @@ window.handleRegister = async function(event) {
   }
 };
 
-// 6. Giriş İşlemi (E-posta ve Şifre)
+// 7. Giriş Yapma Fonksiyonu
 window.handleLogin = async function(event) {
   event.preventDefault();
   const email = document.getElementById('loginEmail').value;
@@ -123,7 +125,7 @@ window.handleLogin = async function(event) {
   }
 };
 
-// 7. Şifre Sıfırlama (Mail Gönderme)
+// 8. Şifre Sıfırlama (Şifremi Unuttum)
 window.triggerForgotPassword = async function() {
   const email = prompt("Şifre sıfırlama bağlantısı gönderilecek E-posta adresinizi girin:");
   if (!email) return;
@@ -141,20 +143,22 @@ window.triggerForgotPassword = async function() {
   }
 };
 
-// 8. Çıkış İşlemi
+// 9. Çıkış Yapma
 window.logout = function() {
   signOut(auth);
 };
 
-// 9. Sol Menüden Ders Seçme ve Embed PDF Yükleme
+// 10. Ders Seçimi ve PDF Gösterimi
 window.selectCourse = function(element, courseTitle, driveId) {
   const listItems = document.querySelectorAll('.course-list li');
   listItems.forEach(item => item.classList.remove('active'));
   element.classList.add('active');
 
-  document.getElementById('current-course-title').innerText = courseTitle;
+  const titleElem = document.getElementById('current-course-title');
+  if (titleElem) titleElem.innerText = courseTitle;
 
   const pdfFrame = document.getElementById('pdf-frame');
-  pdfFrame.src = `https://drive.google.com/file/d/${driveId}/preview`;
+  if (pdfFrame) {
+    pdfFrame.src = `https://drive.google.com/file/d/${driveId}/preview`;
+  }
 };
-</script>
