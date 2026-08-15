@@ -10,14 +10,14 @@ import {
   onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// 2. Firebase Konfigürasyon Bilgileriniz
+// Firebase Yapılandırması (Sizin Gerçek Bilgileriniz)
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyA0lZFiA-HcJ0CiEgSVvqUaJu0g9xIK7CQ",
+  authDomain: "cyhnportal.firebaseapp.com",
+  projectId: "cyhnportal",
+  storageBucket: "cyhnportal.firebasestorage.app",
+  messagingSenderId: "77600127787",
+  appId: "1:77600127787:web:a29478c4c5c264b1cbe36e"
 };
 
 const app = initializeApp(firebaseConfig);
