@@ -383,9 +383,18 @@
 
         let isLoginMode = true;
 
-        // E-posta simülasyon fonksiyonu
+        // Türkçe karakterleri temizleme ve güvenli e-posta formatına çevirme
         const formatEmail = (username) => {
-            const cleanUser = username.trim().toLowerCase().replace(/\s+/g, '');
+            let cleanUser = username.trim().toLowerCase()
+                .replace(/ğ/g, 'g')
+                .replace(/ü/g, 'u')
+                .replace(/ş/g, 's')
+                .replace(/ı/g, 'i')
+                .replace(/ö/g, 'o')
+                .replace(/ç/g, 'c')
+                .replace(/[^a-z0-9]/g, '');
+            
+            if (!cleanUser) cleanUser = 'user' + Math.floor(Math.random() * 1000);
             return `${cleanUser}@cyhnportal.com`;
         };
 
@@ -431,14 +440,18 @@
                 }
             } catch (error) {
                 console.error(error);
-                let msg = 'Bir hata oluştu. Lütfen tekrar deneyin.';
+                let msg = `Hata Oluştu: ${error.code}`;
+                
                 if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
                     msg = 'Kullanıcı adı veya şifre hatalı!';
                 } else if (error.code === 'auth/email-already-in-use') {
                     msg = 'Bu kullanıcı adı zaten kullanılmakta!';
                 } else if (error.code === 'auth/weak-password') {
                     msg = 'Şifreniz en az 6 karakter olmalıdır!';
+                } else if (error.code === 'auth/operation-not-allowed') {
+                    msg = 'Firebase panelinde Email/Password seçeneği henüz kaydedilmemiş!';
                 }
+                
                 showAlert(msg, 'error');
             } finally {
                 submitBtn.disabled = false;
@@ -466,14 +479,12 @@
             const userDisplay = document.getElementById('userDisplay');
 
             if (user) {
-                // Kullanıcı Giriş Yapmış
                 const username = user.email.split('@')[0];
                 authSection.style.display = 'none';
                 portalSection.style.display = 'block';
                 userInfo.style.display = 'flex';
                 userDisplay.innerText = `@${username}`;
             } else {
-                // Kullanıcı Çıkış Yapmış veya Giriş Yapmamış
                 authSection.style.display = 'block';
                 portalSection.style.display = 'none';
                 userInfo.style.display = 'none';
