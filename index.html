@@ -232,6 +232,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      cursor: pointer;
     }
 
     .search-box { padding: 14px 16px; border-bottom: 1px solid var(--border-glass); }
@@ -259,10 +260,11 @@
 
     .sidebar-footer { padding: 16px; border-top: 1px solid var(--border-glass); }
 
-    /* Main Area / PDF Viewer */
+    /* Main Area / Workspace */
     .main-workspace {
       flex: 1; display: flex; flex-direction: column;
       background: var(--bg-main); position: relative; width: 100%;
+      overflow-y: auto;
     }
 
     .workspace-header {
@@ -270,14 +272,95 @@
       background: var(--bg-surface);
       border-bottom: 1px solid var(--border-glass);
       display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 10;
     }
 
     .workspace-title { display: flex; align-items: center; gap: 10px; }
     .workspace-title h2 { font-size: 1.05rem; font-weight: 700; }
 
-    .pdf-container { flex: 1; padding: 16px; position: relative; display: flex; flex-direction: column; }
+    /* --- KARŞILAMA / DERS KARTLARI EKRANI (WELCOME VIEW) --- */
+    .welcome-container {
+      padding: 30px 5%;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
 
-    /* PDF Loader */
+    .welcome-banner {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      margin-bottom: 30px;
+    }
+
+    .welcome-banner h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; }
+    .welcome-banner p { color: var(--text-secondary); font-size: 0.95rem; }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .course-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .course-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(99, 102, 241, 0.4);
+      box-shadow: 0 12px 30px -10px rgba(99, 102, 241, 0.2);
+    }
+
+    .card-icon {
+      width: 44px; height: 44px;
+      border-radius: var(--radius-md);
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; margin-bottom: 14px;
+    }
+
+    .course-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
+    .course-card p { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 16px; }
+
+    .card-action {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--accent);
+      padding-top: 12px;
+      border-top: 1px solid var(--border-glass);
+    }
+
+    /* --- PDF GÖRÜNTÜLEYİCİ EKRANI --- */
+    .pdf-container {
+      flex: 1; padding: 16px; position: relative;
+      display: flex; flex-direction: column; height: calc(100vh - 65px);
+    }
+
     .pdf-loader {
       position: absolute; inset: 16px; background: var(--bg-main);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -296,10 +379,9 @@
       flex: 1; width: 100%; height: 100%;
       border-radius: var(--radius-lg); overflow: hidden;
       border: 1px solid var(--border-glass); background: #1e293b;
-      position: relative; /* KORUMA İÇİN EKLENDİ */
+      position: relative;
     }
 
-    /* Google Drive "Yeni Sekmede Aç" butonunu kapatan maske */
     .pdf-iframe-wrapper::after {
       content: ''; position: absolute; top: 0; right: 0;
       width: 60px; height: 60px; background: transparent; z-index: 20;
@@ -313,7 +395,7 @@
       backdrop-filter: blur(4px); z-index: 75;
     }
 
-    /* ================= MOBİL UYUM (RESPONSIVE) MEDYA SORGULARI ================= */
+    /* MOBİL UYUM (RESPONSIVE) */
     @media (max-width: 768px) {
       .hero h1 { font-size: 1.9rem; }
       .hero p { font-size: 0.95rem; }
@@ -327,9 +409,10 @@
 
       .sidebar.open { transform: translateX(0); }
 
+      .welcome-container { padding: 20px 16px; }
       .pdf-container { padding: 8px; }
       .workspace-header { padding: 10px 14px; }
-      .workspace-title h2 { font-size: 0.95rem; }
+      .workspace-title h2 { font-size: 0.9rem; }
       .btn { padding: 8px 14px; font-size: 0.82rem; }
     }
   </style>
@@ -417,7 +500,7 @@
 
     <!-- Sol Sidebar -->
     <aside class="sidebar" id="sidebar">
-      <div class="sidebar-brand">
+      <div class="sidebar-brand" onclick="showWelcomeView()">
         <div class="logo-icon"><i class="fa-solid fa-book-open"></i></div>
         <div>
           <h3 style="font-size: 0.95rem; font-weight:700;">Ders Notları</h3>
@@ -436,7 +519,7 @@
         <div class="menu-category">Matematik Dersleri</div>
         <ul id="courseList" style="list-style: none;">
           <!-- GOOGLE DRIVE ID'LERİNİZİ BURAYA YAZIN -->
-          <li class="course-item active" onclick="loadCourse(this, 'Analiz 2 Ders Notları', '1ABC123_ORNEK_DRIVE_ID_1')">
+          <li class="course-item" onclick="loadCourse(this, 'Analiz 2 Ders Notları', '1ABC123_ORNEK_DRIVE_ID_1')">
             <div class="course-item-title">
               <i class="fa-solid fa-file-pdf"></i>
               <span>Analiz 2</span>
@@ -474,27 +557,93 @@
     <main class="main-workspace">
       <header class="workspace-header">
         <div class="workspace-title">
-          <!-- Mobil Hamburger Menü Butonu -->
           <button class="btn btn-glass mobile-menu-btn" onclick="toggleSidebar()">
             <i class="fa-solid fa-bars"></i>
           </button>
-          <h2 id="activeCourseTitle">Analiz 2 Ders Notları</h2>
+          <button class="btn btn-glass hidden" id="backToHomeBtn" onclick="showWelcomeView()">
+            <i class="fa-solid fa-house"></i>
+          </button>
+          <h2 id="activeCourseTitle">Ana Panel</h2>
         </div>
-        <button class="btn btn-glass" onclick="toggleFullscreen()">
-          <i class="fa-solid fa-expand"></i> <span style="display:inline-block;">Tam Ekran</span>
+        <button class="btn btn-glass hidden" id="fullscreenBtn" onclick="toggleFullscreen()">
+          <i class="fa-solid fa-expand"></i> <span>Tam Ekran</span>
         </button>
       </header>
 
-      <div class="pdf-container">
+      <!-- KARŞILAMA / DERS SEÇİM EKRANI (WELCOME VIEW) -->
+      <div id="welcomeView" class="welcome-container">
+        <div class="welcome-banner">
+          <h2>Hoş Geldiniz 👋</h2>
+          <p>Çalışmak istediğiniz dersi aşağıdaki kartlardan seçebilir veya sol menüyü kullanabilirsiniz.</p>
+        </div>
+
+        <div class="section-title">
+          <i class="fa-solid fa-layer-group" style="color: var(--accent);"></i>
+          Mevcut Ders Materyalleri
+        </div>
+
+        <div class="course-grid">
+          <div class="course-card" onclick="selectCourseFromIndex(0)">
+            <div>
+              <div class="card-icon"><i class="fa-solid fa-calculator"></i></div>
+              <h3>Analiz 2</h3>
+              <p>İntegral, seriler ve çok değişkenli fonksiyonlar ders notları.</p>
+            </div>
+            <div class="card-action">
+              <span>Notları İncele</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </div>
+
+          <div class="course-card" onclick="selectCourseFromIndex(1)">
+            <div>
+              <div class="card-icon"><i class="fa-solid fa-chart-line"></i></div>
+              <h3>Analiz 1</h3>
+              <p>LİMİT, süreklilik ve türev kavramları ders içerikleri.</p>
+            </div>
+            <div class="card-action">
+              <span>Notları İncele</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </div>
+
+          <div class="course-card" onclick="selectCourseFromIndex(2)">
+            <div>
+              <div class="card-icon"><i class="fa-solid fa-grip"></i></div>
+              <h3>Lineer Cebir</h3>
+              <p>Matrisler, determinat, vektör uzayları ve lineer dönüşümler.</p>
+            </div>
+            <div class="card-action">
+              <span>Notları İncele</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </div>
+
+          <div class="course-card" onclick="selectCourseFromIndex(3)">
+            <div>
+              <div class="card-icon"><i class="fa-solid fa-infinity"></i></div>
+              <h3>Soyut Matematik</h3>
+              <p>Kümeler, bağıntılar, mantık ve grup teorisi temelleri.</p>
+            </div>
+            <div class="card-action">
+              <span>Notları İncele</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PDF GÖRÜNTÜLEYİCİ EKRANI -->
+      <div id="pdfContainer" class="pdf-container hidden">
         <div id="pdfLoader" class="pdf-loader">
           <div class="spinner"></div>
-          <p style="color: var(--text-secondary); font-size: 0.85rem;">Yükleniyor...</p>
+          <p style="color: var(--text-secondary); font-size: 0.85rem;">Ders notu yükleniyor...</p>
         </div>
 
         <div class="pdf-iframe-wrapper" id="iframeWrapper">
           <iframe 
             id="pdfFrame" 
-            src="https://drive.google.com/file/d/1ABC123_ORNEK_DRIVE_ID_1/preview" 
+            src="" 
             onload="hideLoader()"
             allow="autoplay">
           </iframe>
@@ -528,11 +677,22 @@
       closeAuthModal();
       document.getElementById('landing-page').classList.add('hidden');
       document.getElementById('dashboard').classList.remove('hidden');
+      showWelcomeView(); // Girişte ana paneli aç
     }
 
     function logout() {
       document.getElementById('dashboard').classList.add('hidden');
       document.getElementById('landing-page').classList.remove('hidden');
+    }
+
+    /* Karşılama Ekranını / Ana Paneli Göster */
+    function showWelcomeView() {
+      document.getElementById('welcomeView').classList.remove('hidden');
+      document.getElementById('pdfContainer').classList.add('hidden');
+      document.getElementById('backToHomeBtn').classList.add('hidden');
+      document.getElementById('fullscreenBtn').classList.add('hidden');
+      document.getElementById('activeCourseTitle').innerText = "Ana Panel";
+      document.querySelectorAll('.course-item').forEach(el => el.classList.remove('active'));
     }
 
     /* Mobil Menü Aç/Kapat */
@@ -543,11 +703,18 @@
       overlay.classList.toggle('hidden');
     }
 
+    /* Sol Menüden veya Karttan Ders Yükleme */
     function loadCourse(element, title, driveId) {
       document.querySelectorAll('.course-item').forEach(el => el.classList.remove('active'));
-      element.classList.add('active');
+      if(element) element.classList.add('active');
 
+      document.getElementById('welcomeView').classList.add('hidden');
+      document.getElementById('pdfContainer').classList.remove('hidden');
+      document.getElementById('backToHomeBtn').classList.remove('hidden');
+      document.getElementById('fullscreenBtn').classList.remove('hidden');
+      
       document.getElementById('activeCourseTitle').innerText = title;
+
       const loader = document.getElementById('pdfLoader');
       loader.style.opacity = '1';
       loader.classList.remove('hidden');
@@ -555,9 +722,16 @@
       const pdfFrame = document.getElementById('pdfFrame');
       pdfFrame.src = `https://drive.google.com/file/d/${driveId}/preview`;
 
-      // Telefondan ders seçilince menüyü otomatik kapat
-      if (window.innerWidth <= 768) {
+      if (window.innerWidth <= 768 && document.getElementById('sidebar').classList.contains('open')) {
         toggleSidebar();
+      }
+    }
+
+    /* Karşılama Kartlarından Tıklayınca Sol Menüyle Eşleştirme */
+    function selectCourseFromIndex(index) {
+      const items = document.querySelectorAll('#courseList .course-item');
+      if (items[index]) {
+        items[index].click();
       }
     }
 
