@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Akademik Ders Notları Portalı</title>
   
-  <!-- Modern Font (Plus Jakarta Sans) & FontAwesome İkonları -->
+  <!-- Modern Font & FontAwesome İkonları -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
   <style>
     :root {
       --bg-main: #090d16;
-      --bg-surface: rgba(19, 27, 44, 0.75);
+      --bg-surface: rgba(19, 27, 44, 0.85);
       --bg-card: rgba(30, 41, 59, 0.6);
       --accent: #6366f1;
       --accent-glow: rgba(99, 102, 241, 0.35);
@@ -22,7 +22,6 @@
       --text-primary: #f8fafc;
       --text-secondary: #94a3b8;
       --border-glass: rgba(255, 255, 255, 0.08);
-      --border-focus: rgba(99, 102, 241, 0.5);
       --radius-lg: 16px;
       --radius-md: 10px;
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -53,25 +52,21 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 10px 22px;
+      padding: 10px 20px;
       border-radius: var(--radius-md);
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       cursor: pointer;
       transition: var(--transition);
       border: 1px solid transparent;
       outline: none;
+      white-space: nowrap;
     }
 
     .btn-primary {
       background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
       color: #fff;
       box-shadow: 0 4px 20px var(--accent-glow);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
     }
 
     .btn-glass {
@@ -81,20 +76,10 @@
       backdrop-filter: blur(10px);
     }
 
-    .btn-glass:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
     .btn-danger {
       background: rgba(239, 68, 68, 0.15);
       color: #f87171;
       border: 1px solid rgba(239, 68, 68, 0.2);
-    }
-
-    .btn-danger:hover {
-      background: rgba(239, 68, 68, 0.3);
-      color: #fff;
     }
 
     /* --- NAVBAR --- */
@@ -102,7 +87,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 8%;
+      padding: 16px 5%;
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border-glass);
       position: sticky;
@@ -113,25 +98,24 @@
     .logo {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 1.35rem;
+      gap: 10px;
+      font-size: 1.2rem;
       font-weight: 800;
-      letter-spacing: -0.5px;
       background: linear-gradient(135deg, #fff 30%, var(--text-secondary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .logo-icon {
-      width: 38px;
-      height: 38px;
+      width: 34px;
+      height: 34px;
       background: linear-gradient(135deg, var(--accent), #8b5cf6);
-      border-radius: 10px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 1.1rem;
+      font-size: 1rem;
       box-shadow: 0 4px 15px var(--accent-glow);
     }
 
@@ -142,7 +126,7 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      min-height: calc(100vh - 80px);
+      min-height: calc(100vh - 70px);
       padding: 40px 20px;
     }
 
@@ -150,106 +134,75 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 16px;
+      padding: 6px 14px;
       border-radius: 30px;
       background: rgba(99, 102, 241, 0.1);
       border: 1px solid rgba(99, 102, 241, 0.3);
       color: #a5b4fc;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 600;
-      margin-bottom: 24px;
-      animation: pulseGlow 3s infinite;
-    }
-
-    @keyframes pulseGlow {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.2); }
-      50% { box-shadow: 0 0 20px 5px rgba(99, 102, 241, 0.4); }
+      margin-bottom: 20px;
     }
 
     .hero h1 {
-      font-size: 3.2rem;
+      font-size: 2.8rem;
       font-weight: 800;
       line-height: 1.2;
       max-width: 800px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .hero p {
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       color: var(--text-secondary);
       max-width: 600px;
       line-height: 1.6;
-      margin-bottom: 36px;
+      margin-bottom: 30px;
     }
 
-    /* --- MODAL (GİRİŞ / KAYIT) --- */
+    /* --- MODAL --- */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(4, 7, 13, 0.8);
+      background: rgba(4, 7, 13, 0.85);
       backdrop-filter: blur(12px);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 100;
-      animation: fadeIn 0.3s ease;
+      padding: 16px;
     }
 
     .modal-card {
       background: var(--bg-surface);
       border: 1px solid var(--border-glass);
       border-radius: var(--radius-lg);
-      padding: 36px;
+      padding: 28px;
       width: 100%;
-      max-width: 420px;
+      max-width: 400px;
       position: relative;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
     }
 
     .close-modal {
       position: absolute;
-      top: 20px;
-      right: 20px;
-      background: none;
-      border: none;
+      top: 18px; right: 18px;
+      background: none; border: none;
       color: var(--text-secondary);
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: var(--transition);
+      font-size: 1.2rem; cursor: pointer;
     }
 
-    .close-modal:hover { color: #fff; }
-
-    .input-field {
-      margin-bottom: 20px;
-    }
-
-    .input-field label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-    }
-
+    .input-field { margin-bottom: 16px; }
+    .input-field label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
     .input-field input {
-      width: 100%;
-      padding: 12px 16px;
+      width: 100%; padding: 12px;
       background: rgba(15, 23, 42, 0.6);
       border: 1px solid var(--border-glass);
       border-radius: var(--radius-md);
-      color: #fff;
-      font-size: 0.95rem;
-      outline: none;
-      transition: var(--transition);
-    }
-
-    .input-field input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-glow);
+      color: #fff; font-size: 0.9rem; outline: none;
     }
 
     /* --- DASHBOARD LAYOUT --- */
@@ -258,214 +211,126 @@
       height: 100vh;
       width: 100vw;
       overflow: hidden;
+      position: relative;
     }
 
     /* Sidebar */
     .sidebar {
-      width: 320px;
+      width: 300px;
       background: var(--bg-surface);
       border-right: 1px solid var(--border-glass);
       display: flex;
       flex-direction: column;
       backdrop-filter: blur(16px);
+      z-index: 80;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .sidebar-brand {
-      padding: 24px;
+      padding: 20px;
       border-bottom: 1px solid var(--border-glass);
       display: flex;
       align-items: center;
       gap: 12px;
     }
 
-    .search-box {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border-glass);
-    }
-
-    .search-input-wrapper {
-      position: relative;
-    }
-
-    .search-input-wrapper i {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-secondary);
-    }
-
+    .search-box { padding: 14px 16px; border-bottom: 1px solid var(--border-glass); }
+    .search-input-wrapper { position: relative; }
+    .search-input-wrapper i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
     .search-input-wrapper input {
-      width: 100%;
-      padding: 10px 12px 10px 38px;
+      width: 100%; padding: 10px 10px 10px 36px;
       background: rgba(15, 23, 42, 0.5);
       border: 1px solid var(--border-glass);
-      border-radius: 8px;
-      color: #fff;
-      font-size: 0.88rem;
-      outline: none;
+      border-radius: 8px; color: #fff; font-size: 0.85rem; outline: none;
     }
 
-    .course-menu {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px 12px;
-    }
-
-    .menu-category {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-secondary);
-      padding: 12px 12px 6px 12px;
-    }
+    .course-menu { flex: 1; overflow-y: auto; padding: 12px 10px; }
+    .menu-category { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); padding: 8px 10px; }
 
     .course-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 14px;
-      border-radius: var(--radius-md);
-      margin-bottom: 6px;
-      cursor: pointer;
-      color: var(--text-secondary);
-      transition: var(--transition);
-      border: 1px solid transparent;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px; border-radius: var(--radius-md); margin-bottom: 4px;
+      cursor: pointer; color: var(--text-secondary); transition: var(--transition);
     }
 
-    .course-item-title {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 500;
-      font-size: 0.92rem;
-    }
-
-    .course-item-title i { font-size: 1rem; }
-
-    .course-item:hover {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-primary);
-    }
-
-    .course-item.active {
-      background: rgba(99, 102, 241, 0.15);
-      color: #fff;
-      border-color: rgba(99, 102, 241, 0.3);
-    }
-
+    .course-item-title { display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 0.88rem; }
+    .course-item:hover, .course-item.active { background: rgba(99, 102, 241, 0.15); color: #fff; }
     .course-item.active i { color: var(--accent); }
 
-    .badge-tag {
-      font-size: 0.7rem;
-      padding: 2px 8px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-secondary);
-    }
-
-    .sidebar-footer {
-      padding: 20px;
-      border-top: 1px solid var(--border-glass);
-    }
+    .sidebar-footer { padding: 16px; border-top: 1px solid var(--border-glass); }
 
     /* Main Area / PDF Viewer */
     .main-workspace {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      background: var(--bg-main);
-      position: relative;
+      flex: 1; display: flex; flex-direction: column;
+      background: var(--bg-main); position: relative; width: 100%;
     }
 
     .workspace-header {
-      padding: 16px 32px;
+      padding: 14px 20px;
       background: var(--bg-surface);
       border-bottom: 1px solid var(--border-glass);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      display: flex; justify-content: space-between; align-items: center;
     }
 
-    .workspace-title {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .workspace-title { display: flex; align-items: center; gap: 10px; }
+    .workspace-title h2 { font-size: 1.05rem; font-weight: 700; }
 
-    .workspace-title h2 {
-      font-size: 1.2rem;
-      font-weight: 700;
-    }
+    .pdf-container { flex: 1; padding: 16px; position: relative; display: flex; flex-direction: column; }
 
-    .pdf-container {
-      flex: 1;
-      padding: 24px;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* PDF Loading Overlay */
+    /* PDF Loader */
     .pdf-loader {
-      position: absolute;
-      inset: 24px;
-      background: var(--bg-main);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      border-radius: var(--radius-lg);
-      z-index: 10;
-      transition: opacity 0.3s ease;
+      position: absolute; inset: 16px; background: var(--bg-main);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 12px; border-radius: var(--radius-lg); z-index: 10; transition: opacity 0.3s ease;
     }
 
     .spinner {
-      width: 42px;
-      height: 42px;
-      border: 3px solid rgba(99, 102, 241, 0.2);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      width: 36px; height: 36px;
+      border: 3px solid rgba(99, 102, 241, 0.2); border-top-color: var(--accent);
+      border-radius: 50%; animation: spin 0.8s linear infinite;
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .pdf-iframe-wrapper {
-      flex: 1;
-      width: 100%;
-      height: 100%;
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      border: 1px solid var(--border-glass);
-      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.5);
-      background: #1e293b;
-      position: relative; /* Eklenen çizgi */
-    }
-    
-    /* Sağ üst köşedeki Drive "Yeni Sekmede Aç" butonunun üzerini kapatan görünmez maske */
-    .pdf-iframe-wrapper::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 60px;
-      height: 60px;
-      background: transparent;
-      z-index: 20;
-    }
-    
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
+      flex: 1; width: 100%; height: 100%;
+      border-radius: var(--radius-lg); overflow: hidden;
+      border: 1px solid var(--border-glass); background: #1e293b;
+      position: relative; /* KORUMA İÇİN EKLENDİ */
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.96); }
-      to { opacity: 1; transform: scale(1); }
+    /* Google Drive "Yeni Sekmede Aç" butonunu kapatan maske */
+    .pdf-iframe-wrapper::after {
+      content: ''; position: absolute; top: 0; right: 0;
+      width: 60px; height: 60px; background: transparent; z-index: 20;
+    }
+
+    iframe { width: 100%; height: 100%; border: none; }
+
+    .mobile-menu-btn { display: none; }
+    .sidebar-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px); z-index: 75;
+    }
+
+    /* ================= MOBİL UYUM (RESPONSIVE) MEDYA SORGULARI ================= */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 1.9rem; }
+      .hero p { font-size: 0.95rem; }
+      
+      .mobile-menu-btn { display: inline-flex !important; }
+
+      .sidebar {
+        position: fixed; top: 0; left: 0; height: 100vh;
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open { transform: translateX(0); }
+
+      .pdf-container { padding: 8px; }
+      .workspace-header { padding: 10px 14px; }
+      .workspace-title h2 { font-size: 0.95rem; }
+      .btn { padding: 8px 14px; font-size: 0.82rem; }
     }
   </style>
 </head>
@@ -480,7 +345,7 @@
       </div>
       <div>
         <button class="btn btn-glass" onclick="openAuthModal('login')">Giriş Yap</button>
-        <button class="btn btn-primary" style="margin-left:8px;" onclick="openAuthModal('register')">Kayıt Ol</button>
+        <button class="btn btn-primary" style="margin-left:4px;" onclick="openAuthModal('register')">Kayıt Ol</button>
       </div>
     </nav>
 
@@ -490,7 +355,7 @@
       </div>
       <h1>Üniversite Notlarına Güvenli ve Hızlı Erişim</h1>
       <p>Analiz, Lineer Cebir, Soyut Matematik ve daha fazlası. Tüm akademik ders materyalleriniz korumalı embed sistemle elinizin altında.</p>
-      <button class="btn btn-primary btn-lg" onclick="openAuthModal('login')">
+      <button class="btn btn-primary" style="padding: 14px 28px; font-size: 1rem;" onclick="openAuthModal('login')">
         <i class="fa-solid fa-arrow-right-to-bracket"></i> Ders Paneline Giriş Yap
       </button>
     </main>
@@ -501,10 +366,9 @@
     <div class="modal-card">
       <button class="close-modal" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
 
-      <!-- Giriş Formu -->
       <div id="login-form">
-        <h2 style="margin-bottom: 8px;">Hoş Geldiniz</h2>
-        <p style="color: var(--text-secondary); font-size:0.9rem; margin-bottom:24px;">Ders notlarını görüntülemek için giriş yapın.</p>
+        <h2 style="margin-bottom: 6px; font-size:1.4rem;">Hoş Geldiniz</h2>
+        <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:20px;">Ders notlarını görüntülemek için giriş yapın.</p>
         <form onsubmit="handleAuth(event)">
           <div class="input-field">
             <label>E-Posta Adresi</label>
@@ -516,15 +380,14 @@
           </div>
           <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Giriş Yap</button>
         </form>
-        <p style="text-align: center; margin-top: 20px; font-size: 0.88rem; color: var(--text-secondary);">
+        <p style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--text-secondary);">
           Hesabınız yok mu? <a href="#" style="color: var(--accent); text-decoration: none;" onclick="switchForm('register')">Kayıt Olun</a>
         </p>
       </div>
 
-      <!-- Kayıt Formu -->
       <div id="register-form" class="hidden">
-        <h2 style="margin-bottom: 8px;">Hesap Oluştur</h2>
-        <p style="color: var(--text-secondary); font-size:0.9rem; margin-bottom:24px;">Notlara erişim sağlamak için kaydolun.</p>
+        <h2 style="margin-bottom: 6px; font-size:1.4rem;">Hesap Oluştur</h2>
+        <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:20px;">Notlara erişim sağlamak için kaydolun.</p>
         <form onsubmit="handleAuth(event)">
           <div class="input-field">
             <label>Ad Soyad</label>
@@ -540,7 +403,7 @@
           </div>
           <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Hesap Oluştur</button>
         </form>
-        <p style="text-align: center; margin-top: 20px; font-size: 0.88rem; color: var(--text-secondary);">
+        <p style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--text-secondary);">
           Zaten hesabınız var mı? <a href="#" style="color: var(--accent); text-decoration: none;" onclick="switchForm('login')">Giriş Yapın</a>
         </p>
       </div>
@@ -549,17 +412,19 @@
 
   <!-- ================= 3. DERS NOTLARI PANELİ (DASHBOARD) ================= -->
   <div id="dashboard" class="dashboard-container hidden">
+    <!-- Mobil Arka Plan Karartması -->
+    <div id="sidebarOverlay" class="sidebar-overlay hidden" onclick="toggleSidebar()"></div>
+
     <!-- Sol Sidebar -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
       <div class="sidebar-brand">
         <div class="logo-icon"><i class="fa-solid fa-book-open"></i></div>
         <div>
-          <h3 style="font-size: 1rem; font-weight:700;">Ders Notları</h3>
-          <p style="font-size: 0.75rem; color: var(--text-secondary);">Matematik Bölümü</p>
+          <h3 style="font-size: 0.95rem; font-weight:700;">Ders Notları</h3>
+          <p style="font-size: 0.72rem; color: var(--text-secondary);">Matematik Bölümü</p>
         </div>
       </div>
 
-      <!-- Canlı Arama Kutusu -->
       <div class="search-box">
         <div class="search-input-wrapper">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -567,39 +432,33 @@
         </div>
       </div>
 
-      <!-- Ders Listesi -->
       <nav class="course-menu">
         <div class="menu-category">Matematik Dersleri</div>
-        
         <ul id="courseList" style="list-style: none;">
-          <!-- GOOGLE DRIVE ID'LERINIZI BURAYA YAZIN -->
-          <li class="course-item active" onclick="loadCourse(this, 'Analiz 2 Ders Notları', '1qnqJBPsZLYCtTIN1X-XCP6mEph7OHhAJ')">
+          <!-- GOOGLE DRIVE ID'LERİNİZİ BURAYA YAZIN -->
+          <li class="course-item active" onclick="loadCourse(this, 'Analiz 2 Ders Notları', '1ABC123_ORNEK_DRIVE_ID_1')">
             <div class="course-item-title">
               <i class="fa-solid fa-file-pdf"></i>
               <span>Analiz 2</span>
             </div>
-            <span class="badge-tag">PDF</span>
           </li>
           <li class="course-item" onclick="loadCourse(this, 'Analiz 1 Ders Notları', '1ABC123_ORNEK_DRIVE_ID_2')">
             <div class="course-item-title">
               <i class="fa-solid fa-file-pdf"></i>
               <span>Analiz 1</span>
             </div>
-            <span class="badge-tag">PDF</span>
           </li>
           <li class="course-item" onclick="loadCourse(this, 'Lineer Cebir', '1ABC123_ORNEK_DRIVE_ID_3')">
             <div class="course-item-title">
               <i class="fa-solid fa-file-pdf"></i>
               <span>Lineer Cebir</span>
             </div>
-            <span class="badge-tag">PDF</span>
           </li>
           <li class="course-item" onclick="loadCourse(this, 'Soyut Matematik', '1ABC123_ORNEK_DRIVE_ID_4')">
             <div class="course-item-title">
               <i class="fa-solid fa-file-pdf"></i>
               <span>Soyut Matematik</span>
             </div>
-            <span class="badge-tag">PDF</span>
           </li>
         </ul>
       </nav>
@@ -611,23 +470,25 @@
       </div>
     </aside>
 
-    <!-- Sağ Çalışma Alanı (PDF Viewer) -->
+    <!-- Sağ Çalışma Alanı -->
     <main class="main-workspace">
       <header class="workspace-header">
         <div class="workspace-title">
-          <i class="fa-solid fa-file-lines" style="color: var(--accent); font-size:1.2rem;"></i>
+          <!-- Mobil Hamburger Menü Butonu -->
+          <button class="btn btn-glass mobile-menu-btn" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars"></i>
+          </button>
           <h2 id="activeCourseTitle">Analiz 2 Ders Notları</h2>
         </div>
         <button class="btn btn-glass" onclick="toggleFullscreen()">
-          <i class="fa-solid fa-expand"></i> Tam Ekran
+          <i class="fa-solid fa-expand"></i> <span style="display:inline-block;">Tam Ekran</span>
         </button>
       </header>
 
       <div class="pdf-container">
-        <!-- Yükleniyor Göstergesi -->
         <div id="pdfLoader" class="pdf-loader">
           <div class="spinner"></div>
-          <p style="color: var(--text-secondary); font-size: 0.9rem;">Ders notu yükleniyor...</p>
+          <p style="color: var(--text-secondary); font-size: 0.85rem;">Yükleniyor...</p>
         </div>
 
         <div class="pdf-iframe-wrapper" id="iframeWrapper">
@@ -642,7 +503,6 @@
     </main>
   </div>
 
-  <!-- JavaScript Etkileşim Kodları -->
   <script>
     function openAuthModal(mode) {
       document.getElementById('auth-modal').classList.remove('hidden');
@@ -675,20 +535,30 @@
       document.getElementById('landing-page').classList.remove('hidden');
     }
 
+    /* Mobil Menü Aç/Kapat */
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('hidden');
+    }
+
     function loadCourse(element, title, driveId) {
-      // Aktif eleman stilini güncelle
       document.querySelectorAll('.course-item').forEach(el => el.classList.remove('active'));
       element.classList.add('active');
 
-      // Başlığı güncelle & Yükleme ekranını aç
       document.getElementById('activeCourseTitle').innerText = title;
       const loader = document.getElementById('pdfLoader');
       loader.style.opacity = '1';
       loader.classList.remove('hidden');
 
-      // Iframe URL güncelleme
       const pdfFrame = document.getElementById('pdfFrame');
       pdfFrame.src = `https://drive.google.com/file/d/${driveId}/preview`;
+
+      // Telefondan ders seçilince menüyü otomatik kapat
+      if (window.innerWidth <= 768) {
+        toggleSidebar();
+      }
     }
 
     function hideLoader() {
@@ -715,12 +585,9 @@
         document.exitFullscreen();
       }
     }
-    // ================= EKLEYECEĞİNİZ GÜVENLİK KODLARI =================
-    
-    // Sağ tık menüsünü engelle
-    document.addEventListener('contextmenu', event => event.preventDefault());
 
-    // F12, Ctrl+U, Ctrl+S, Ctrl+P kısayollarını engelle
+    // GÜVENLİK KODLARI (Sağ Tık ve Kısayol Engelleme)
+    document.addEventListener('contextmenu', event => event.preventDefault());
     document.addEventListener('keydown', event => {
       if (
         event.key === 'F12' || 
