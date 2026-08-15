@@ -502,17 +502,23 @@
         <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:16px;">Ders notlarını görüntülemek için giriş yapın.</p>
         
         <div id="loginAlert" class="alert-box"></div>
-
+      
         <form onsubmit="handleLogin(event)">
           <div class="input-field">
-            <label>Kullanıcı Adı</label>
-            <input type="text" id="loginUsername" placeholder="Kullanıcı adınız" required />
+            <label>E-posta Adresi</label>
+            <input type="email" id="loginEmail" placeholder="ornek@gmail.com" required />
           </div>
           <div class="input-field">
             <label>Şifre</label>
             <input type="password" id="loginPassword" placeholder="••••••••" required minlength="6" />
           </div>
-          <button type="submit" id="loginBtn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Giriş Yap</button>
+      
+          <!-- ŞİFREMİ UNUTTUM LİNKİ -->
+          <div style="text-align: right; margin-top: -6px; margin-bottom: 12px;">
+            <a href="#" style="color: var(--accent); font-size: 0.8rem; text-decoration: none;" onclick="triggerForgotPassword()">Şifremi Unuttum?</a>
+          </div>
+      
+          <button type="submit" id="loginBtn" class="btn btn-primary" style="width: 100%;">Giriş Yap</button>
         </form>
         <p style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--text-secondary);">
           Hesabınız yok mu? <a href="#" style="color: var(--accent); text-decoration: none;" onclick="switchForm('register')">Kayıt Olun</a>
@@ -525,8 +531,12 @@
         <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:16px;">Notlara erişim sağlamak için kaydolun.</p>
         
         <div id="registerAlert" class="alert-box"></div>
-
+      
         <form onsubmit="handleRegister(event)">
+          <div class="input-field">
+            <label>E-posta Adresi</label>
+            <input type="email" id="regEmail" placeholder="ornek@gmail.com" required />
+          </div>
           <div class="input-field">
             <label>Kullanıcı Adı</label>
             <input type="text" id="regUsername" placeholder="Kullanıcı adı belirleyin" required />
