@@ -330,7 +330,7 @@
         </div>
 
         <div class="grid-cards">
-            <!-- Örnek Kart 1 -->
+            <!-- Kart 1 -->
             <div class="card">
                 <div class="card-icon"><i class="fa-solid fa-file-pdf"></i></div>
                 <h3>LGS Matematik Deneme Notları</h3>
@@ -338,7 +338,7 @@
                 <a href="#" target="_blank" class="btn-download"><i class="fa-solid fa-download"></i> Görüntüle / İndir</a>
             </div>
 
-            <!-- Örnek Kart 2 -->
+            <!-- Kart 2 -->
             <div class="card">
                 <div class="card-icon"><i class="fa-solid fa-file-pdf"></i></div>
                 <h3>7. Sınıf Rasyonel Sayılar</h3>
@@ -346,7 +346,7 @@
                 <a href="#" target="_blank" class="btn-download"><i class="fa-solid fa-download"></i> Görüntüle / İndir</a>
             </div>
 
-            <!-- Örnek Kart 3 -->
+            <!-- Kart 3 -->
             <div class="card">
                 <div class="card-icon"><i class="fa-solid fa-file-pdf"></i></div>
                 <h3>6. Sınıf Cebirsel İfadeler</h3>
@@ -369,7 +369,7 @@
 
         // Firebase Yapılandırması
         const firebaseConfig = {
-            apiKey: "AIzaSyA0LZFiA-HcJ0CiEgSVvqUaJu0g9xIK7CQ",
+            apiKey: "AIzaSyA0lZFiA-HcJ0CiEgSVvqUaJu0g9xIK7CQ",
             authDomain: "cyhnportal.firebaseapp.com",
             projectId: "cyhnportal",
             storageBucket: "cyhnportal.firebasestorage.app",
@@ -383,7 +383,7 @@
 
         let isLoginMode = true;
 
-        // Türkçe karakterleri temizleme ve güvenli e-posta formatına çevirme
+        // Türkçe karakter ve boşluk temizleme fonksiyonu
         const formatEmail = (username) => {
             let cleanUser = username.trim().toLowerCase()
                 .replace(/ğ/g, 'g')
