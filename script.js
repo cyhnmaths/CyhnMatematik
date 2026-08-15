@@ -4,13 +4,12 @@ import {
   getAuth, 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
-  sendPasswordResetEmail,
   updateProfile,
   signOut, 
   onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// Firebase Yapılandırması (Sizin Gerçek Bilgileriniz)
+// 2. Firebase Yapılandırması
 const firebaseConfig = {
   apiKey: "AIzaSyA0lZFiA-HcJ0CiEgSVvqUaJu0g9xIK7CQ",
   authDomain: "cyhnportal.firebaseapp.com",
@@ -125,30 +124,12 @@ window.handleLogin = async function(event) {
   }
 };
 
-// 8. Şifre Sıfırlama (Şifremi Unuttum)
-window.triggerForgotPassword = async function() {
-  const email = prompt("Şifre sıfırlama bağlantısı gönderilecek E-posta adresinizi girin:");
-  if (!email) return;
-
-  try {
-    await sendPasswordResetEmail(auth, email);
-    alert("Şifre sıfırlama bağlantısı e-posta adresinize gönderildi. Lütfen gelen kutunuzu ve spam klasörünü kontrol edin.");
-  } catch (error) {
-    console.error("Mail gönderme hatası:", error);
-    if (error.code === 'auth/user-not-found') {
-      alert("Bu e-posta adresine ait bir hesap bulunamadı!");
-    } else {
-      alert("Mail gönderilirken hata oluştu: " + error.message);
-    }
-  }
-};
-
-// 9. Çıkış Yapma
+// 8. Çıkış Yapma
 window.logout = function() {
   signOut(auth);
 };
 
-// 10. Ders Seçimi ve PDF Gösterimi
+// 9. Ders Seçimi ve PDF Gösterimi
 window.selectCourse = function(element, courseTitle, driveId) {
   const listItems = document.querySelectorAll('.course-list li');
   listItems.forEach(item => item.classList.remove('active'));
