@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Akademik Ders Notları Portalı</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Font Awesome İkonları -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- ================= 1. KARŞILAMA SAYFASI (LANDING PAGE) ================= -->
+  <div id="landing-page">
+    <header class="navbar">
+      <div class="logo">
+        <i class="fa-solid fa-graduation-cap"></i> <span>DersNotları</span>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn btn-outline" onclick="openAuthModal('login')">Giriş Yap</button>
+        <button class="btn btn-primary" onclick="openAuthModal('register')">Kayıt Ol</button>
+      </div>
+    </header>
+
+    <main class="hero-section">
+      <div class="hero-content">
+        <h1>Üniversite Ders Notlarına Kolay ve Hızlı Erişim</h1>
+        <p>Analiz, Lineer Cebir, Soyut Matematik ve daha fazlası. Tüm çalışma notları ve PDF'ler tek bir platformda toplandı.</p>
+        <div class="hero-buttons">
+          <button class="btn btn-primary btn-lg" onclick="openAuthModal('login')">
+            <i class="fa-solid fa-right-to-bracket"></i> Notlara Erişmek İçin Giriş Yap
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ================= 2. GİRİŞ / KAYIT MODAL PENCERESİ ================= -->
+  <div id="auth-modal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeAuthModal()">&times;</span>
+      
+      <div id="login-form-container">
+        <h2>Giriş Yap</h2>
+        <form onsubmit="handleAuth(event)">
+          <div class="input-group">
+            <label>E-Posta</label>
+            <input type="email" placeholder="ogrenci@university.edu.tr" required />
+          </div>
+          <div class="input-group">
+            <label>Şifre</label>
+            <input type="password" placeholder="••••••••" required />
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Giriş Yap</button>
+        </form>
+        <p class="switch-mode">Hesabın yok mu? <a href="#" onclick="switchAuthMode('register')">Kayıt Ol</a></p>
+      </div>
+
+      <div id="register-form-container" class="hidden">
+        <h2>Kayıt Ol</h2>
+        <form onsubmit="handleAuth(event)">
+          <div class="input-group">
+            <label>Ad Soyad</label>
+            <input type="text" placeholder="Ad Soyad" required />
+          </div>
+          <div class="input-group">
+            <label>E-Posta</label>
+            <input type="email" placeholder="ogrenci@university.edu.tr" required />
+          </div>
+          <div class="input-group">
+            <label>Şifre</label>
+            <input type="password" placeholder="••••••••" required />
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Hesap Oluştur</button>
+        </form>
+        <p class="switch-mode">Zaten hesabın var mı? <a href="#" onclick="switchAuthMode('login')">Giriş Yap</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 3. DERS NOTLARI PANELİ (DASHBOARD) ================= -->
+  <div id="dashboard" class="dashboard-container hidden">
+    <!-- Sol Menü -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <i class="fa-solid fa-book-bookmark"></i>
+        <h2>Ders Paneli</h2>
+      </div>
+      
+      <nav class="course-list">
+        <ul>
+          <!-- GOOGLE DRIVE ID'LERİNİZİ BURADAKİ data-drive-id ALANLARINA YAZIN -->
+          <li class="active" onclick="selectCourse(this, 'Analiz 2 Ders Notları', '1ABC123_ORNEK_DRIVE_ID_1')">
+            <i class="fa-solid fa-file-pdf"></i> Analiz 2
+          </li>
+          <li onclick="selectCourse(this, 'Analiz 1 Ders Notları', '1ABC123_ORNEK_DRIVE_ID_2')">
+            <i class="fa-solid fa-file-pdf"></i> Analiz 1
+          </li>
+          <li onclick="selectCourse(this, 'Lineer Cebir Notları', '1ABC123_ORNEK_DRIVE_ID_3')">
+            <i class="fa-solid fa-file-pdf"></i> Lineer Cebir
+          </li>
+          <li onclick="selectCourse(this, 'Soyut Matematik', '1ABC123_ORNEK_DRIVE_ID_4')">
+            <i class="fa-solid fa-file-pdf"></i> Soyut Matematik
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="btn btn-danger btn-block" onclick="logout()">
+          <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
+        </button>
+      </div>
+    </aside>
+
+    <!-- İçerik Alanı (PDF Embed Viewer) -->
+    <main class="main-content">
+      <header class="content-header">
+        <h2 id="current-course-title">Analiz 2 Ders Notları</h2>
+      </header>
+
+      <div class="pdf-wrapper">
+        <!-- PDF Iframe'i -->
+        <iframe 
+          id="pdf-frame" 
+          src="https://drive.google.com/file/d/1ABC123_ORNEK_DRIVE_ID_1/preview" 
+          allow="autoplay">
+        </iframe>
+      </div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
