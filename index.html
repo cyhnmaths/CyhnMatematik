@@ -1,775 +1,484 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Akademik Ders Notları Portalı</title>
-  
-  <!-- Modern Font & FontAwesome İkonları -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYHN Portal - Ders Notları & Materyaller</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg-dark: #0F172A;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --danger: #EF4444;
+            --success: #10B981;
+        }
 
-  <style>
-    :root {
-      --bg-main: #090d16;
-      --bg-surface: rgba(19, 27, 44, 0.85);
-      --bg-card: rgba(30, 41, 59, 0.6);
-      --accent: #6366f1;
-      --accent-glow: rgba(99, 102, 241, 0.35);
-      --accent-hover: #4f46e5;
-      --text-primary: #f8fafc;
-      --text-secondary: #94a3b8;
-      --border-glass: rgba(255, 255, 255, 0.08);
-      --radius-lg: 16px;
-      --radius-md: 10px;
-      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(124, 58, 237, 0.15) 0px, transparent 50%);
+        }
 
-    body {
-      background-color: var(--bg-main);
-      color: var(--text-primary);
-      min-height: 100vh;
-      overflow-x: hidden;
-      background-image: 
-        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 85% 85%, rgba(139, 92, 246, 0.12) 0%, transparent 40%);
-    }
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-    .hidden { display: none !important; }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #818CF8, #C084FC);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-    /* --- BUTONLAR --- */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 10px 20px;
-      border-radius: var(--radius-md);
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: var(--transition);
-      border: 1px solid transparent;
-      outline: none;
-      white-space: nowrap;
-    }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
 
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
-      color: #fff;
-      box-shadow: 0 4px 20px var(--accent-glow);
-    }
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
 
-    .btn-glass {
-      background: var(--bg-card);
-      color: var(--text-primary);
-      border: 1px solid var(--border-glass);
-      backdrop-filter: blur(10px);
-    }
+        .btn-logout:hover {
+            background: var(--danger);
+            color: #fff;
+        }
 
-    .btn-danger {
-      background: rgba(239, 68, 68, 0.15);
-      color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.2);
-    }
+        /* Auth Container */
+        .auth-container {
+            max-width: 420px;
+            width: 90%;
+            margin: auto;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
 
-    /* --- NAVBAR --- */
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 5%;
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border-glass);
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.2rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #fff 30%, var(--text-secondary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+        .auth-header h2 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
 
-    .logo-icon {
-      width: 34px;
-      height: 34px;
-      background: linear-gradient(135deg, var(--accent), #8b5cf6);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 1rem;
-      box-shadow: 0 4px 15px var(--accent-glow);
-    }
+        .auth-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
 
-    /* --- HERO SECTION --- */
-    .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      min-height: calc(100vh - 70px);
-      padding: 40px 20px;
-    }
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
-      border-radius: 30px;
-      background: rgba(99, 102, 241, 0.1);
-      border: 1px solid rgba(99, 102, 241, 0.3);
-      color: #a5b4fc;
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin-bottom: 20px;
-    }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
 
-    .hero h1 {
-      font-size: 2.8rem;
-      font-weight: 800;
-      line-height: 1.2;
-      max-width: 800px;
-      margin-bottom: 16px;
-      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+        .input-wrapper {
+            position: relative;
+        }
 
-    .hero p {
-      font-size: 1.05rem;
-      color: var(--text-secondary);
-      max-width: 600px;
-      line-height: 1.6;
-      margin-bottom: 30px;
-    }
+        .input-wrapper i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
 
-    /* --- MODAL --- */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(4, 7, 13, 0.85);
-      backdrop-filter: blur(12px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      padding: 16px;
-    }
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.75rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s;
+        }
 
-    .modal-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      width: 100%;
-      max-width: 400px;
-      position: relative;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-    }
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
 
-    .close-modal {
-      position: absolute;
-      top: 18px; right: 18px;
-      background: none; border: none;
-      color: var(--text-secondary);
-      font-size: 1.2rem; cursor: pointer;
-    }
+        .btn-primary {
+            width: 100%;
+            padding: 0.85rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 0.5rem;
+        }
 
-    .input-field { margin-bottom: 16px; }
-    .input-field label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
-    .input-field input {
-      width: 100%; padding: 12px;
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-md);
-      color: #fff; font-size: 0.9rem; outline: none;
-    }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
 
-    /* --- DASHBOARD LAYOUT --- */
-    .dashboard-container {
-      display: flex;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-      position: relative;
-    }
+        .auth-switch {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
 
-    /* Sidebar */
-    .sidebar {
-      width: 300px;
-      background: var(--bg-surface);
-      border-right: 1px solid var(--border-glass);
-      display: flex;
-      flex-direction: column;
-      backdrop-filter: blur(16px);
-      z-index: 80;
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+        .auth-switch a {
+            color: #818CF8;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
 
-    .sidebar-brand {
-      padding: 20px;
-      border-bottom: 1px solid var(--border-glass);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-    }
+        .alert-box {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
 
-    .search-box { padding: 14px 16px; border-bottom: 1px solid var(--border-glass); }
-    .search-input-wrapper { position: relative; }
-    .search-input-wrapper i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
-    .search-input-wrapper input {
-      width: 100%; padding: 10px 10px 10px 36px;
-      background: rgba(15, 23, 42, 0.5);
-      border: 1px solid var(--border-glass);
-      border-radius: 8px; color: #fff; font-size: 0.85rem; outline: none;
-    }
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #FCA5A5;
+        }
 
-    .course-menu { flex: 1; overflow-y: auto; padding: 12px 10px; }
-    .menu-category { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); padding: 8px 10px; }
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6EE7B7;
+        }
 
-    .course-item {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px; border-radius: var(--radius-md); margin-bottom: 4px;
-      cursor: pointer; color: var(--text-secondary); transition: var(--transition);
-    }
+        /* Portal Content (Öğrenci Paneli) */
+        .portal-content {
+            display: none;
+            max-width: 1100px;
+            width: 90%;
+            margin: 2rem auto;
+        }
 
-    .course-item-title { display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 0.88rem; }
-    .course-item:hover, .course-item.active { background: rgba(99, 102, 241, 0.15); color: #fff; }
-    .course-item.active i { color: var(--accent); }
+        .portal-header {
+            margin-bottom: 2rem;
+        }
 
-    .sidebar-footer { padding: 16px; border-top: 1px solid var(--border-glass); }
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
 
-    /* Main Area / Workspace */
-    .main-workspace {
-      flex: 1; display: flex; flex-direction: column;
-      background: var(--bg-main); position: relative; width: 100%;
-      overflow-y: auto;
-    }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
 
-    .workspace-header {
-      padding: 14px 20px;
-      background: var(--bg-surface);
-      border-bottom: 1px solid var(--border-glass);
-      display: flex; justify-content: space-between; align-items: center;
-      position: sticky; top: 0; z-index: 10;
-    }
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(129, 140, 248, 0.4);
+        }
 
-    .workspace-title { display: flex; align-items: center; gap: 10px; }
-    .workspace-title h2 { font-size: 1.05rem; font-weight: 700; }
+        .card-icon {
+            font-size: 2rem;
+            color: #818CF8;
+            margin-bottom: 1rem;
+        }
 
-    /* --- KARŞILAMA / DERS KARTLARI EKRANI (WELCOME VIEW) --- */
-    .welcome-container {
-      padding: 30px 5%;
-      max-width: 1200px;
-      margin: 0 auto;
-      width: 100%;
-    }
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
 
-    .welcome-banner {
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
-      border: 1px solid rgba(99, 102, 241, 0.25);
-      border-radius: var(--radius-lg);
-      padding: 24px 28px;
-      margin-bottom: 30px;
-    }
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-bottom: 1.25rem;
+        }
 
-    .welcome-banner h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; }
-    .welcome-banner p { color: var(--text-secondary); font-size: 0.95rem; }
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
 
-    .section-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .course-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 20px;
-    }
-
-    .course-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      cursor: pointer;
-      transition: var(--transition);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .course-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(99, 102, 241, 0.4);
-      box-shadow: 0 12px 30px -10px rgba(99, 102, 241, 0.2);
-    }
-
-    .card-icon {
-      width: 44px; height: 44px;
-      border-radius: var(--radius-md);
-      background: rgba(99, 102, 241, 0.15);
-      color: var(--accent);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem; margin-bottom: 14px;
-    }
-
-    .course-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
-    .course-card p { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 16px; }
-
-    .card-action {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--accent);
-      padding-top: 12px;
-      border-top: 1px solid var(--border-glass);
-    }
-
-    /* --- PDF GÖRÜNTÜLEYİCİ EKRANI --- */
-    .pdf-container {
-      flex: 1; padding: 16px; position: relative;
-      display: flex; flex-direction: column; height: calc(100vh - 65px);
-    }
-
-    .pdf-loader {
-      position: absolute; inset: 16px; background: var(--bg-main);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 12px; border-radius: var(--radius-lg); z-index: 10; transition: opacity 0.3s ease;
-    }
-
-    .spinner {
-      width: 36px; height: 36px;
-      border: 3px solid rgba(99, 102, 241, 0.2); border-top-color: var(--accent);
-      border-radius: 50%; animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .pdf-iframe-wrapper {
-      flex: 1; width: 100%; height: 100%;
-      border-radius: var(--radius-lg); overflow: hidden;
-      border: 1px solid var(--border-glass); background: #1e293b;
-      position: relative;
-    }
-
-    .pdf-iframe-wrapper::after {
-      content: ''; position: absolute; top: 0; right: 0;
-      width: 60px; height: 60px; background: transparent; z-index: 20;
-    }
-
-    iframe { width: 100%; height: 100%; border: none; }
-
-    .mobile-menu-btn { display: none; }
-    .sidebar-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(4px); z-index: 75;
-    }
-
-    /* MOBİL UYUM (RESPONSIVE) */
-    @media (max-width: 768px) {
-      .hero h1 { font-size: 1.9rem; }
-      .hero p { font-size: 0.95rem; }
-      
-      .mobile-menu-btn { display: inline-flex !important; }
-
-      .sidebar {
-        position: fixed; top: 0; left: 0; height: 100vh;
-        transform: translateX(-100%);
-      }
-
-      .sidebar.open { transform: translateX(0); }
-
-      .welcome-container { padding: 20px 16px; }
-      .pdf-container { padding: 8px; }
-      .workspace-header { padding: 10px 14px; }
-      .workspace-title h2 { font-size: 0.9rem; }
-      .btn { padding: 8px 14px; font-size: 0.82rem; }
-    }
-  </style>
+        .btn-download:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+    </style>
 </head>
 <body>
 
-  <!-- ================= 1. KARŞILAMA SAYFASI ================= -->
-  <div id="landing-page">
+    <!-- Navbar -->
     <nav class="navbar">
-      <div class="logo">
-        <div class="logo-icon"><i class="fa-solid fa-graduation-cap"></i></div>
-        <span>AcademiaNotes</span>
-      </div>
-      <div>
-        <button class="btn btn-glass" onclick="openAuthModal('login')">Giriş Yap</button>
-        <button class="btn btn-primary" style="margin-left:4px;" onclick="openAuthModal('register')">Kayıt Ol</button>
-      </div>
+        <div class="logo">
+            <i class="fa-solid fa-graduation-cap"></i> CYHN Portal
+        </div>
+        <div id="userInfo" class="user-info" style="display: none;">
+            <span id="userDisplay"></span>
+            <button class="btn-logout" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</button>
+        </div>
     </nav>
 
-    <main class="hero">
-      <div class="badge">
-        <i class="fa-solid fa-sparkles"></i> 2026 Dijital Ders Portalı
-      </div>
-      <h1>Üniversite Notlarına Güvenli ve Hızlı Erişim</h1>
-      <p>Analiz, Lineer Cebir, Soyut Matematik ve daha fazlası. Tüm akademik ders materyalleriniz korumalı embed sistemle elinizin altında.</p>
-      <button class="btn btn-primary" style="padding: 14px 28px; font-size: 1rem;" onclick="openAuthModal('login')">
-        <i class="fa-solid fa-arrow-right-to-bracket"></i> Ders Paneline Giriş Yap
-      </button>
-    </main>
-  </div>
+    <!-- Giriş & Kayıt Alanı -->
+    <div id="authSection" class="auth-container">
+        <div class="auth-header">
+            <h2 id="authTitle">Giriş Yap</h2>
+            <p id="authSubtitle">Ders notlarına ve materyallere erişmek için giriş yapın.</p>
+        </div>
 
-  <!-- ================= 2. MODAL PENCERESİ ================= -->
-  <div id="auth-modal" class="modal-overlay hidden">
-    <div class="modal-card">
-      <button class="close-modal" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+        <div id="alertBox" class="alert-box"></div>
 
-      <div id="login-form">
-        <h2 style="margin-bottom: 6px; font-size:1.4rem;">Hoş Geldiniz</h2>
-        <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:20px;">Ders notlarını görüntülemek için giriş yapın.</p>
-        <form onsubmit="handleAuth(event)">
-          <div class="input-field">
-            <label>E-Posta Adresi</label>
-            <input type="email" placeholder="ogrenci@university.edu.tr" required />
-          </div>
-          <div class="input-field">
-            <label>Şifre</label>
-            <input type="password" placeholder="••••••••" required />
-          </div>
-          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Giriş Yap</button>
+        <form id="authForm" onsubmit="handleAuth(event)">
+            <div class="form-group">
+                <label>Kullanıcı Adı</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="username" class="form-control" placeholder="Kullanıcı adınız" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Şifre</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="password" class="form-control" placeholder="••••••••" required minlength="6">
+                </div>
+            </div>
+
+            <button type="submit" id="authSubmitBtn" class="btn-primary">Giriş Yap</button>
         </form>
-        <p style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--text-secondary);">
-          Hesabınız yok mu? <a href="#" style="color: var(--accent); text-decoration: none;" onclick="switchForm('register')">Kayıt Olun</a>
-        </p>
-      </div>
 
-      <div id="register-form" class="hidden">
-        <h2 style="margin-bottom: 6px; font-size:1.4rem;">Hesap Oluştur</h2>
-        <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:20px;">Notlara erişim sağlamak için kaydolun.</p>
-        <form onsubmit="handleAuth(event)">
-          <div class="input-field">
-            <label>Ad Soyad</label>
-            <input type="text" placeholder="Ad Soyad" required />
-          </div>
-          <div class="input-field">
-            <label>E-Posta Adresi</label>
-            <input type="email" placeholder="ogrenci@university.edu.tr" required />
-          </div>
-          <div class="input-field">
-            <label>Şifre</label>
-            <input type="password" placeholder="••••••••" required />
-          </div>
-          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Hesap Oluştur</button>
-        </form>
-        <p style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--text-secondary);">
-          Zaten hesabınız var mı? <a href="#" style="color: var(--accent); text-decoration: none;" onclick="switchForm('login')">Giriş Yapın</a>
-        </p>
-      </div>
+        <div class="auth-switch">
+            <span id="switchText">Hesabınız yok mu?</span>
+            <a onclick="toggleAuthMode()" id="switchBtn">Kaydolun</a>
+        </div>
     </div>
-  </div>
 
-  <!-- ================= 3. DERS NOTLARI PANELİ (DASHBOARD) ================= -->
-  <div id="dashboard" class="dashboard-container hidden">
-    <!-- Mobil Arka Plan Karartması -->
-    <div id="sidebarOverlay" class="sidebar-overlay hidden" onclick="toggleSidebar()"></div>
-
-    <!-- Sol Sidebar -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-brand" onclick="showWelcomeView()">
-        <div class="logo-icon"><i class="fa-solid fa-book-open"></i></div>
-        <div>
-          <h3 style="font-size: 0.95rem; font-weight:700;">Ders Notları</h3>
-          <p style="font-size: 0.72rem; color: var(--text-secondary);">Matematik Bölümü</p>
-        </div>
-      </div>
-
-      <div class="search-box">
-        <div class="search-input-wrapper">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="courseSearch" placeholder="Ders notu ara..." onkeyup="filterCourses()" />
-        </div>
-      </div>
-
-      <nav class="course-menu">
-        <div class="menu-category">Matematik Dersleri</div>
-        <ul id="courseList" style="list-style: none;">
-          <!-- GOOGLE DRIVE ID'LERİNİZİ BURAYA YAZIN -->
-          <li class="course-item" onclick="loadCourse(this, 'Analiz 2 Ders Notları', '1ABC123_ORNEK_DRIVE_ID_1')">
-            <div class="course-item-title">
-              <i class="fa-solid fa-file-pdf"></i>
-              <span>Analiz 2</span>
-            </div>
-          </li>
-          <li class="course-item" onclick="loadCourse(this, 'Analiz 1 Ders Notları', '1ABC123_ORNEK_DRIVE_ID_2')">
-            <div class="course-item-title">
-              <i class="fa-solid fa-file-pdf"></i>
-              <span>Analiz 1</span>
-            </div>
-          </li>
-          <li class="course-item" onclick="loadCourse(this, 'Lineer Cebir', '1ABC123_ORNEK_DRIVE_ID_3')">
-            <div class="course-item-title">
-              <i class="fa-solid fa-file-pdf"></i>
-              <span>Lineer Cebir</span>
-            </div>
-          </li>
-          <li class="course-item" onclick="loadCourse(this, 'Soyut Matematik', '1ABC123_ORNEK_DRIVE_ID_4')">
-            <div class="course-item-title">
-              <i class="fa-solid fa-file-pdf"></i>
-              <span>Soyut Matematik</span>
-            </div>
-          </li>
-        </ul>
-      </nav>
-
-      <div class="sidebar-footer">
-        <button class="btn btn-danger" style="width: 100%;" onclick="logout()">
-          <i class="fa-solid fa-arrow-right-from-bracket"></i> Çıkış Yap
-        </button>
-      </div>
-    </aside>
-
-    <!-- Sağ Çalışma Alanı -->
-    <main class="main-workspace">
-      <header class="workspace-header">
-        <div class="workspace-title">
-          <button class="btn btn-glass mobile-menu-btn" onclick="toggleSidebar()">
-            <i class="fa-solid fa-bars"></i>
-          </button>
-          <button class="btn btn-glass hidden" id="backToHomeBtn" onclick="showWelcomeView()">
-            <i class="fa-solid fa-house"></i>
-          </button>
-          <h2 id="activeCourseTitle">Ana Panel</h2>
-        </div>
-        <button class="btn btn-glass hidden" id="fullscreenBtn" onclick="toggleFullscreen()">
-          <i class="fa-solid fa-expand"></i> <span>Tam Ekran</span>
-        </button>
-      </header>
-
-      <!-- KARŞILAMA / DERS SEÇİM EKRANI (WELCOME VIEW) -->
-      <div id="welcomeView" class="welcome-container">
-        <div class="welcome-banner">
-          <h2>Hoş Geldiniz 👋</h2>
-          <p>Çalışmak istediğiniz dersi aşağıdaki kartlardan seçebilir veya sol menüyü kullanabilirsiniz.</p>
+    <!-- Öğrenci Paneli (Giriş Yapınca Açılır) -->
+    <div id="portalSection" class="portal-content">
+        <div class="portal-header">
+            <h2>Ders Materyalleri</h2>
+            <p style="color: var(--text-muted);">Aşağıdaki ders notlarını ve PDF çalışma kâğıtlarını indirebilirsiniz.</p>
         </div>
 
-        <div class="section-title">
-          <i class="fa-solid fa-layer-group" style="color: var(--accent);"></i>
-          Mevcut Ders Materyalleri
+        <div class="grid-cards">
+            <!-- Örnek Kart 1 -->
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                <h3>LGS Matematik Deneme Notları</h3>
+                <p>Çarpanlar ve Katlar, Üslü İfadeler detaylı konu özeti.</p>
+                <a href="#" target="_blank" class="btn-download"><i class="fa-solid fa-download"></i> Görüntüle / İndir</a>
+            </div>
+
+            <!-- Örnek Kart 2 -->
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                <h3>7. Sınıf Rasyonel Sayılar</h3>
+                <p>Soru çözümleri ve pratik yapabileceğiniz alıştırmalar.</p>
+                <a href="#" target="_blank" class="btn-download"><i class="fa-solid fa-download"></i> Görüntüle / İndir</a>
+            </div>
+
+            <!-- Örnek Kart 3 -->
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                <h3>6. Sınıf Cebirsel İfadeler</h3>
+                <p>Konu kavrama testleri ve çalışma yaprakları.</p>
+                <a href="#" target="_blank" class="btn-download"><i class="fa-solid fa-download"></i> Görüntüle / İndir</a>
+            </div>
         </div>
+    </div>
 
-        <div class="course-grid">
-          <div class="course-card" onclick="selectCourseFromIndex(0)">
-            <div>
-              <div class="card-icon"><i class="fa-solid fa-calculator"></i></div>
-              <h3>Analiz 2</h3>
-              <p>İntegral, seriler ve çok değişkenli fonksiyonlar ders notları.</p>
-            </div>
-            <div class="card-action">
-              <span>Notları İncele</span>
-              <i class="fa-solid fa-arrow-right"></i>
-            </div>
-          </div>
+    <!-- Firebase SDK (Version 10 Modular CDN) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            signOut, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-          <div class="course-card" onclick="selectCourseFromIndex(1)">
-            <div>
-              <div class="card-icon"><i class="fa-solid fa-chart-line"></i></div>
-              <h3>Analiz 1</h3>
-              <p>LİMİT, süreklilik ve türev kavramları ders içerikleri.</p>
-            </div>
-            <div class="card-action">
-              <span>Notları İncele</span>
-              <i class="fa-solid fa-arrow-right"></i>
-            </div>
-          </div>
+        // Firebase Yapılandırması
+        const firebaseConfig = {
+            apiKey: "AIzaSyA0LZFiA-HcJ0CiEgSVvqUaJu0g9xIK7CQ",
+            authDomain: "cyhnportal.firebaseapp.com",
+            projectId: "cyhnportal",
+            storageBucket: "cyhnportal.firebasestorage.app",
+            messagingSenderId: "77600127787",
+            appId: "1:77600127787:web:a29478c4c5c264b1cbe36e"
+        };
 
-          <div class="course-card" onclick="selectCourseFromIndex(2)">
-            <div>
-              <div class="card-icon"><i class="fa-solid fa-grip"></i></div>
-              <h3>Lineer Cebir</h3>
-              <p>Matrisler, determinat, vektör uzayları ve lineer dönüşümler.</p>
-            </div>
-            <div class="card-action">
-              <span>Notları İncele</span>
-              <i class="fa-solid fa-arrow-right"></i>
-            </div>
-          </div>
+        // Firebase Başlat
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
 
-          <div class="course-card" onclick="selectCourseFromIndex(3)">
-            <div>
-              <div class="card-icon"><i class="fa-solid fa-infinity"></i></div>
-              <h3>Soyut Matematik</h3>
-              <p>Kümeler, bağıntılar, mantık ve grup teorisi temelleri.</p>
-            </div>
-            <div class="card-action">
-              <span>Notları İncele</span>
-              <i class="fa-solid fa-arrow-right"></i>
-            </div>
-          </div>
-        </div>
-      </div>
+        let isLoginMode = true;
 
-      <!-- PDF GÖRÜNTÜLEYİCİ EKRANI -->
-      <div id="pdfContainer" class="pdf-container hidden">
-        <div id="pdfLoader" class="pdf-loader">
-          <div class="spinner"></div>
-          <p style="color: var(--text-secondary); font-size: 0.85rem;">Ders notu yükleniyor...</p>
-        </div>
+        // E-posta simülasyon fonksiyonu
+        const formatEmail = (username) => {
+            const cleanUser = username.trim().toLowerCase().replace(/\s+/g, '');
+            return `${cleanUser}@cyhnportal.com`;
+        };
 
-        <div class="pdf-iframe-wrapper" id="iframeWrapper">
-          <iframe 
-            id="pdfFrame" 
-            src="" 
-            onload="hideLoader()"
-            allow="autoplay">
-          </iframe>
-        </div>
-      </div>
-    </main>
-  </div>
+        // Giriş / Kayıt Mod Değişimi
+        window.toggleAuthMode = () => {
+            isLoginMode = !isLoginMode;
+            const alertBox = document.getElementById('alertBox');
+            alertBox.style.display = 'none';
 
-  <script>
-    function openAuthModal(mode) {
-      document.getElementById('auth-modal').classList.remove('hidden');
-      switchForm(mode);
-    }
+            if (isLoginMode) {
+                document.getElementById('authTitle').innerText = 'Giriş Yap';
+                document.getElementById('authSubtitle').innerText = 'Ders notlarına ve materyallere erişmek için giriş yapın.';
+                document.getElementById('authSubmitBtn').innerText = 'Giriş Yap';
+                document.getElementById('switchText').innerText = 'Hesabınız yok mu? ';
+                document.getElementById('switchBtn').innerText = 'Kaydolun';
+            } else {
+                document.getElementById('authTitle').innerText = 'Hesap Oluştur';
+                document.getElementById('authSubtitle').innerText = 'Yeni bir kullanıcı adı ve şifre belirleyerek kayıt olun.';
+                document.getElementById('authSubmitBtn').innerText = 'Kaydol';
+                document.getElementById('switchText').innerText = 'Zaten hesabınız var mı? ';
+                document.getElementById('switchBtn').innerText = 'Giriş Yapın';
+            }
+        };
 
-    function closeAuthModal() {
-      document.getElementById('auth-modal').classList.add('hidden');
-    }
+        // Form Gönderim İşlemi
+        window.handleAuth = async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const alertBox = document.getElementById('alertBox');
+            const submitBtn = document.getElementById('authSubmitBtn');
 
-    function switchForm(mode) {
-      if (mode === 'login') {
-        document.getElementById('login-form').classList.remove('hidden');
-        document.getElementById('register-form').classList.add('hidden');
-      } else {
-        document.getElementById('login-form').classList.add('hidden');
-        document.getElementById('register-form').classList.remove('hidden');
-      }
-    }
+            const fakeEmail = formatEmail(username);
+            alertBox.style.display = 'none';
+            submitBtn.disabled = true;
 
-    function handleAuth(event) {
-      event.preventDefault();
-      closeAuthModal();
-      document.getElementById('landing-page').classList.add('hidden');
-      document.getElementById('dashboard').classList.remove('hidden');
-      showWelcomeView(); // Girişte ana paneli aç
-    }
+            try {
+                if (isLoginMode) {
+                    await signInWithEmailAndPassword(auth, fakeEmail, password);
+                } else {
+                    await createUserWithEmailAndPassword(auth, fakeEmail, password);
+                    showAlert('Hesabınız başarıyla oluşturuldu! Yönlendiriliyorsunuz...', 'success');
+                }
+            } catch (error) {
+                console.error(error);
+                let msg = 'Bir hata oluştu. Lütfen tekrar deneyin.';
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                    msg = 'Kullanıcı adı veya şifre hatalı!';
+                } else if (error.code === 'auth/email-already-in-use') {
+                    msg = 'Bu kullanıcı adı zaten kullanılmakta!';
+                } else if (error.code === 'auth/weak-password') {
+                    msg = 'Şifreniz en az 6 karakter olmalıdır!';
+                }
+                showAlert(msg, 'error');
+            } finally {
+                submitBtn.disabled = false;
+            }
+        };
 
-    function logout() {
-      document.getElementById('dashboard').classList.add('hidden');
-      document.getElementById('landing-page').classList.remove('hidden');
-    }
+        // Çıkış İşlemi
+        window.handleLogout = () => {
+            signOut(auth);
+        };
 
-    /* Karşılama Ekranını / Ana Paneli Göster */
-    function showWelcomeView() {
-      document.getElementById('welcomeView').classList.remove('hidden');
-      document.getElementById('pdfContainer').classList.add('hidden');
-      document.getElementById('backToHomeBtn').classList.add('hidden');
-      document.getElementById('fullscreenBtn').classList.add('hidden');
-      document.getElementById('activeCourseTitle').innerText = "Ana Panel";
-      document.querySelectorAll('.course-item').forEach(el => el.classList.remove('active'));
-    }
+        // Bildirim Kutusu Göster
+        const showAlert = (message, type) => {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.innerText = message;
+            alertBox.className = `alert-box alert-${type}`;
+            alertBox.style.display = 'block';
+        };
 
-    /* Mobil Menü Aç/Kapat */
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebarOverlay');
-      sidebar.classList.toggle('open');
-      overlay.classList.toggle('hidden');
-    }
+        // Oturum Durumunu Dinle
+        onAuthStateChanged(auth, (user) => {
+            const authSection = document.getElementById('authSection');
+            const portalSection = document.getElementById('portalSection');
+            const userInfo = document.getElementById('userInfo');
+            const userDisplay = document.getElementById('userDisplay');
 
-    /* Sol Menüden veya Karttan Ders Yükleme */
-    function loadCourse(element, title, driveId) {
-      document.querySelectorAll('.course-item').forEach(el => el.classList.remove('active'));
-      if(element) element.classList.add('active');
-
-      document.getElementById('welcomeView').classList.add('hidden');
-      document.getElementById('pdfContainer').classList.remove('hidden');
-      document.getElementById('backToHomeBtn').classList.remove('hidden');
-      document.getElementById('fullscreenBtn').classList.remove('hidden');
-      
-      document.getElementById('activeCourseTitle').innerText = title;
-
-      const loader = document.getElementById('pdfLoader');
-      loader.style.opacity = '1';
-      loader.classList.remove('hidden');
-
-      const pdfFrame = document.getElementById('pdfFrame');
-      pdfFrame.src = `https://drive.google.com/file/d/${driveId}/preview`;
-
-      if (window.innerWidth <= 768 && document.getElementById('sidebar').classList.contains('open')) {
-        toggleSidebar();
-      }
-    }
-
-    /* Karşılama Kartlarından Tıklayınca Sol Menüyle Eşleştirme */
-    function selectCourseFromIndex(index) {
-      const items = document.querySelectorAll('#courseList .course-item');
-      if (items[index]) {
-        items[index].click();
-      }
-    }
-
-    function hideLoader() {
-      const loader = document.getElementById('pdfLoader');
-      loader.style.opacity = '0';
-      setTimeout(() => loader.classList.add('hidden'), 300);
-    }
-
-    function filterCourses() {
-      const query = document.getElementById('courseSearch').value.toLowerCase();
-      const items = document.querySelectorAll('#courseList .course-item');
-
-      items.forEach(item => {
-        const text = item.innerText.toLowerCase();
-        item.style.display = text.includes(query) ? 'flex' : 'none';
-      });
-    }
-
-    function toggleFullscreen() {
-      const wrapper = document.getElementById('iframeWrapper');
-      if (!document.fullscreenElement) {
-        wrapper.requestFullscreen().catch(err => alert("Tam ekran modu başlatılamadı."));
-      } else {
-        document.exitFullscreen();
-      }
-    }
-
-    // GÜVENLİK KODLARI (Sağ Tık ve Kısayol Engelleme)
-    document.addEventListener('contextmenu', event => event.preventDefault());
-    document.addEventListener('keydown', event => {
-      if (
-        event.key === 'F12' || 
-        (event.ctrlKey && (event.key === 'u' || event.key === 's' || event.key === 'p'))
-      ) {
-        event.preventDefault();
-      }
-    });
-  </script>
+            if (user) {
+                // Kullanıcı Giriş Yapmış
+                const username = user.email.split('@')[0];
+                authSection.style.display = 'none';
+                portalSection.style.display = 'block';
+                userInfo.style.display = 'flex';
+                userDisplay.innerText = `@${username}`;
+            } else {
+                // Kullanıcı Çıkış Yapmış veya Giriş Yapmamış
+                authSection.style.display = 'block';
+                portalSection.style.display = 'none';
+                userInfo.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
