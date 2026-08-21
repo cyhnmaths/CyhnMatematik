@@ -22,11 +22,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Sayfa yüklendiğinde siyah ekranda kalmaması için ilk müdahale
+// Sayfa yüklendiğinde varsayılan olarak giriş/açılış ekranını aktif kıl
 document.addEventListener('DOMContentLoaded', () => {
   const landing = document.getElementById('landing-page');
   if (landing && landing.classList.contains('hidden')) {
     landing.classList.remove('hidden');
+    landing.style.display = 'block';
   }
 });
 
@@ -73,27 +74,44 @@ function clearAlerts() {
   if (registerAlert) registerAlert.style.display = 'none';
 }
 
-// 4. Oturum Takibi
+// 4. Oturum Takibi (Siyah Ekranı Zorla Engelleyen Yapı)
 onAuthStateChanged(auth, (user) => {
   const landing = document.getElementById('landing-page');
-  const dashboard = document.getElementById('dashboard');
+  const dashboard = document.getElementById('dashboard') || document.getElementById('app-dashboard');
+  const authModal = document.getElementById('auth-modal');
 
   if (user) {
-    window.closeAuthModal();
-    landing?.classList.add('hidden');
-    dashboard?.classList.remove('hidden');
+    // Oturum açıksa modalı kapat, açılış sayfasını gizle, paneli göster
+    if (authModal) authModal.classList.add('hidden');
+
+    if (landing) {
+      landing.classList.add('hidden');
+      landing.style.display = 'none';
+    }
     
+    if (dashboard) {
+      dashboard.classList.remove('hidden');
+      dashboard.style.display = 'block';
+    }
+
     const userDisplayName = document.getElementById('userDisplayName');
-    if (userDisplayName) {
+    if (userDisplayName && user.email) {
       userDisplayName.innerText = `@${user.email.split('@')[0]}`;
     }
   } else {
-    dashboard?.classList.add('hidden');
-    landing?.classList.remove('hidden');
+    // Oturum yoksa paneli gizle, açılış sayfasını göster
+    if (dashboard) {
+      dashboard.classList.add('hidden');
+      dashboard.style.display = 'none';
+    }
+    if (landing) {
+      landing.classList.remove('hidden');
+      landing.style.display = 'block';
+    }
   }
 });
 
-// 5. Kayıt Olma
+// 5. Kayıt Olma (Kayıt Sonrası Otomatik Çıkış Yapıp Giriş Ekranına Yönlendirir)
 window.handleRegister = async function(event) {
   event.preventDefault();
 
@@ -115,15 +133,33 @@ window.handleRegister = async function(event) {
   }
 
   try {
+    // 1. Hesabı oluştur
     await createUserWithEmailAndPassword(auth, email, password);
-    showAlert('registerAlert', 'Kayıt başarılı! Yönlendiriliyorsunuz...', 'success');
+    
+    // 2. Otomatik açılan oturumu kapat (Panele geçişi engellemek için)
+    await signOut(auth);
+
+    // 3. Bilgilendirme mesajı ver
+    showAlert('registerAlert', 'Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...', 'success');
+
+    // 4. Form kutularını sıfırla
+    if (emailInput) emailInput.value = '';
+    if (passwordInput) passwordInput.value = '';
+
+    // 5. 2 saniye sonra Giriş moduna geç ve kaydolunan e-postayı doldur
+    setTimeout(() => {
+      window.switchAuthMode('login');
+      const loginEmailInput = document.getElementById('loginEmail');
+      if (loginEmailInput) loginEmailInput.value = email;
+    }, 2000);
+
   } catch (error) {
     console.error("Kayıt Hatası:", error);
     let msg = "Kayıt sırasında bir hata oluştu!";
     if (error.code === 'auth/email-already-in-use') msg = 'Bu e-posta adresi zaten kullanımda!';
     else if (error.code === 'auth/invalid-email') msg = 'Geçersiz bir e-posta adresi girdiniz!';
     else if (error.code === 'auth/weak-password') msg = 'Şifre en az 6 karakter olmalıdır!';
-    else if (error.code === 'auth/operation-not-allowed') msg = 'Firebase paneline Email/Password girişi kapalı!';
+    else if (error.code === 'auth/operation-not-allowed') msg = 'Firebase panelinde Email/Password girişi kapalı!';
     else msg = error.message;
     
     showAlert('registerAlert', msg, 'error');
@@ -194,7 +230,7 @@ window.logout = function() {
   signOut(auth);
 };
 
-// 9. Dashboard ve PDF Yönetimi
+// 9. Dashboard ve PDF Görünüm Yönetimi
 window.showWelcomeView = function() {
   document.getElementById('welcomeView')?.classList.remove('hidden');
   document.getElementById('pdfContainer')?.classList.add('hidden');
@@ -272,7 +308,7 @@ window.toggleFullscreen = function() {
   }
 };
 
-// 10. Güvenlik
+// 10. Güvenlik Kısıtlamaları
 document.addEventListener('contextmenu', event => event.preventDefault());
 document.addEventListener('keydown', event => {
   if (
