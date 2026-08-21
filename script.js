@@ -23,6 +23,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+function usernameToEmail(username) {
+  const clean = username.trim().toLowerCase()
+    .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+    .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+    .replace(/[^a-z0-9]/g, '');
+  return `${clean}@cyhnportal.local`;
+}
+
 // 3. Modal ve Arayüz Yönetimi
 window.openAuthModal = function(mode) {
   document.getElementById('auth-modal')?.classList.remove('hidden');
@@ -83,7 +91,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// 5. Kayıt Olma (E-posta, Kullanıcı Adı ve Şifre)
+// 5. Kayıt Olma
 window.handleRegister = async function(event) {
   event.preventDefault();
   const email = document.getElementById('regEmail')?.value.trim();
@@ -115,10 +123,10 @@ window.handleRegister = async function(event) {
   }
 };
 
-// 6. Giriş Yapma (E-posta ve Şifre)
+// 6. Giriş Yapma
 window.handleLogin = async function(event) {
   event.preventDefault();
-  const email = document.getElementById('loginEmail')?.value.trim();
+  const inputVal = document.getElementById('loginIdentifier')?.value.trim();
   const password = document.getElementById('loginPassword')?.value;
   const btn = document.getElementById('loginBtn');
 
@@ -128,16 +136,18 @@ window.handleLogin = async function(event) {
   }
 
   try {
-    await signInWithEmailAndPassword(auth, email, password);
-  } catch (error) {
-    console.error("Giriş hatası:", error);
-    let msg = "Giriş yapılamadı!";
-    if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
-      msg = 'E-posta adresi veya şifre hatalı!';
-    } else if (error.code === 'auth/invalid-email') {
-      msg = 'Lütfen geçerli bir e-posta adresi girin!';
+    let loginEmail = inputVal;
+    if (!inputVal.includes('@')) {
+      loginEmail = usernameToEmail(inputVal);
     }
-    showAlert('loginAlert', msg, 'error');
+    await signInWithEmailAndPassword(auth, loginEmail, password);
+  } catch (error) {
+    try {
+      await signInWithEmailAndPassword(auth, inputVal, password);
+    } catch (secondErr) {
+      console.error("Giriş hatası:", secondErr);
+      showAlert('loginAlert', 'Kullanıcı adı veya şifre hatalı!', 'error');
+    }
   } finally {
     if (btn) {
       btn.disabled = false;
@@ -169,7 +179,7 @@ window.logout = function() {
   signOut(auth);
 };
 
-// 9. Arayüz ve Ders Navigasyon Mantığı
+// 9. Arayüz ve Navigasyon Mantığı
 window.showWelcomeView = function() {
   document.getElementById('welcomeView')?.classList.remove('hidden');
   document.getElementById('pdfContainer')?.classList.add('hidden');
