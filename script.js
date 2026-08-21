@@ -30,9 +30,11 @@ window.openAuthModal = function(mode) {
 
 window.closeAuthModal = function() {
   document.getElementById('auth-modal')?.classList.add('hidden');
+  clearAlerts();
 };
 
 window.switchAuthMode = function(mode) {
+  clearAlerts();
   const loginForm = document.getElementById('login-form');
   const registerForm = document.getElementById('register-form');
 
@@ -52,9 +54,16 @@ function showAlert(containerId, message, type) {
   const alertBox = document.getElementById(containerId);
   if (alertBox) {
     alertBox.innerText = message;
-    alertBox.className = `alert-box ${type}`;
+    alertBox.className = `alert-box alert-${type}`;
     alertBox.style.display = 'block';
   }
+}
+
+function clearAlerts() {
+  const loginAlert = document.getElementById('loginAlert');
+  const registerAlert = document.getElementById('registerAlert');
+  if (loginAlert) loginAlert.style.display = 'none';
+  if (registerAlert) registerAlert.style.display = 'none';
 }
 
 // 5. Firebase Oturum Takibi
@@ -63,17 +72,23 @@ onAuthStateChanged(auth, (user) => {
     window.closeAuthModal();
     document.getElementById('landing-page')?.classList.add('hidden');
     document.getElementById('dashboard')?.classList.remove('hidden');
+    
+    // Kullanıcı adını ekranda gösterme (varsa)
+    const userDisplayName = document.getElementById('userDisplayName');
+    if (userDisplayName) {
+      userDisplayName.innerText = `@${user.displayName || user.email.split('@')[0]}`;
+    }
   } else {
     document.getElementById('dashboard')?.classList.add('hidden');
     document.getElementById('landing-page')?.classList.remove('hidden');
   }
 });
 
-// 6. Kayıt Olma Fonksiyonu
+// 6. Kayıt Olma Fonksiyonu (E-posta, Kullanıcı Adı ve Şifre)
 window.handleRegister = async function(event) {
   event.preventDefault();
-  const email = document.getElementById('regEmail').value;
-  const username = document.getElementById('regUsername').value;
+  const email = document.getElementById('regEmail').value.trim();
+  const username = document.getElementById('regUsername').value.trim();
   const password = document.getElementById('regPassword').value;
   const btn = document.getElementById('regBtn');
 
@@ -81,8 +96,12 @@ window.handleRegister = async function(event) {
   btn.innerText = 'Kaydediliyor...';
 
   try {
+    // 1. Gerçek e-posta ile kayıt
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    
+    // 2. Kullanıcı adını profile kaydetme
     await updateProfile(userCredential.user, { displayName: username });
+    
     showAlert('registerAlert', 'Kayıt başarılı! Yönlendiriliyorsunuz...', 'success');
   } catch (error) {
     console.error("Kayıt hatası:", error);
@@ -97,10 +116,10 @@ window.handleRegister = async function(event) {
   }
 };
 
-// 7. Giriş Yapma Fonksiyonu
+// 7. Giriş Yapma Fonksiyonu (E-posta ve Şifre)
 window.handleLogin = async function(event) {
   event.preventDefault();
-  const email = document.getElementById('loginEmail').value;
+  const email = document.getElementById('loginEmail').value.trim();
   const password = document.getElementById('loginPassword').value;
   const btn = document.getElementById('loginBtn');
 
@@ -131,14 +150,14 @@ window.logout = function() {
 
 // 9. Ders Seçimi ve PDF Gösterimi
 window.selectCourse = function(element, courseTitle, driveId) {
-  const listItems = document.querySelectorAll('.course-list li');
+  const listItems = document.querySelectorAll('.course-list li, .course-item');
   listItems.forEach(item => item.classList.remove('active'));
-  element.classList.add('active');
+  if (element) element.classList.add('active');
 
-  const titleElem = document.getElementById('current-course-title');
+  const titleElem = document.getElementById('current-course-title') || document.getElementById('activeCourseTitle');
   if (titleElem) titleElem.innerText = courseTitle;
 
-  const pdfFrame = document.getElementById('pdf-frame');
+  const pdfFrame = document.getElementById('pdf-frame') || document.getElementById('pdfFrame');
   if (pdfFrame) {
     pdfFrame.src = `https://drive.google.com/file/d/${driveId}/preview`;
   }
