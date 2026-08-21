@@ -22,6 +22,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+// Sayfa yüklendiğinde siyah ekranda kalmaması için ilk müdahale
+document.addEventListener('DOMContentLoaded', () => {
+  const landing = document.getElementById('landing-page');
+  if (landing && landing.classList.contains('hidden')) {
+    landing.classList.remove('hidden');
+  }
+});
+
 // 3. Modal ve Arayüz Yönetimi
 window.openAuthModal = function(mode) {
   document.getElementById('auth-modal')?.classList.remove('hidden');
@@ -67,23 +75,25 @@ function clearAlerts() {
 
 // 4. Oturum Takibi
 onAuthStateChanged(auth, (user) => {
+  const landing = document.getElementById('landing-page');
+  const dashboard = document.getElementById('dashboard');
+
   if (user) {
     window.closeAuthModal();
-    document.getElementById('landing-page')?.classList.add('hidden');
-    document.getElementById('dashboard')?.classList.remove('hidden');
+    landing?.classList.add('hidden');
+    dashboard?.classList.remove('hidden');
     
-    // Sağ üstte e-postanın @ öncesi kısmını göster
     const userDisplayName = document.getElementById('userDisplayName');
     if (userDisplayName) {
       userDisplayName.innerText = `@${user.email.split('@')[0]}`;
     }
   } else {
-    document.getElementById('dashboard')?.classList.add('hidden');
-    document.getElementById('landing-page')?.classList.remove('hidden');
+    dashboard?.classList.add('hidden');
+    landing?.classList.remove('hidden');
   }
 });
 
-// 5. Kayıt Olma (Saf E-posta + Şifre & Donma Korumalı)
+// 5. Kayıt Olma
 window.handleRegister = async function(event) {
   event.preventDefault();
 
@@ -110,17 +120,12 @@ window.handleRegister = async function(event) {
   } catch (error) {
     console.error("Kayıt Hatası:", error);
     let msg = "Kayıt sırasında bir hata oluştu!";
-    if (error.code === 'auth/email-already-in-use') {
-      msg = 'Bu e-posta adresi zaten kullanımda!';
-    } else if (error.code === 'auth/invalid-email') {
-      msg = 'Geçersiz bir e-posta adresi girdiniz!';
-    } else if (error.code === 'auth/weak-password') {
-      msg = 'Şifre en az 6 karakter olmalıdır!';
-    } else if (error.code === 'auth/operation-not-allowed') {
-      msg = 'Firebase konsolunda Email/Password yöntemi etkin değil!';
-    } else {
-      msg = `Hata: ${error.message}`;
-    }
+    if (error.code === 'auth/email-already-in-use') msg = 'Bu e-posta adresi zaten kullanımda!';
+    else if (error.code === 'auth/invalid-email') msg = 'Geçersiz bir e-posta adresi girdiniz!';
+    else if (error.code === 'auth/weak-password') msg = 'Şifre en az 6 karakter olmalıdır!';
+    else if (error.code === 'auth/operation-not-allowed') msg = 'Firebase paneline Email/Password girişi kapalı!';
+    else msg = error.message;
+    
     showAlert('registerAlert', msg, 'error');
   } finally {
     if (btn) {
@@ -130,7 +135,7 @@ window.handleRegister = async function(event) {
   }
 };
 
-// 6. Giriş Yapma (Saf E-posta + Şifre & Donma Korumalı)
+// 6. Giriş Yapma
 window.handleLogin = async function(event) {
   event.preventDefault();
 
@@ -157,7 +162,6 @@ window.handleLogin = async function(event) {
     console.error("Giriş Hatası:", error);
     let msg = "E-posta veya şifre hatalı!";
     if (error.code === 'auth/invalid-email') msg = "Geçersiz bir e-posta adresi girdiniz!";
-    else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') msg = "E-posta veya şifre hatalı!";
     showAlert('loginAlert', msg, 'error');
   } finally {
     if (btn) {
@@ -190,7 +194,7 @@ window.logout = function() {
   signOut(auth);
 };
 
-// 9. Dashboard ve PDF Görünüm Yönetimi
+// 9. Dashboard ve PDF Yönetimi
 window.showWelcomeView = function() {
   document.getElementById('welcomeView')?.classList.remove('hidden');
   document.getElementById('pdfContainer')?.classList.add('hidden');
@@ -268,7 +272,7 @@ window.toggleFullscreen = function() {
   }
 };
 
-// 10. Güvenlik Önlemleri
+// 10. Güvenlik
 document.addEventListener('contextmenu', event => event.preventDefault());
 document.addEventListener('keydown', event => {
   if (
