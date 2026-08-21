@@ -505,8 +505,8 @@
       
         <form onsubmit="handleLogin(event)">
           <div class="input-field">
-            <label>E-posta Adresi</label>
-            <input type="email" id="loginEmail" placeholder="ornek@gmail.com" required />
+            <label>Kullanıcı Adı veya E-posta</label>
+            <input type="text" id="loginIdentifier" placeholder="Kullanıcı adı veya e-posta" required />
           </div>
       
           <div class="input-field">
@@ -516,10 +516,6 @@
       
           <button type="submit" id="loginBtn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Giriş Yap</button>
         </form>
-      
-        <p style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--text-secondary);">
-          Hesabınız yok mu? <a href="#" style="color: var(--accent); text-decoration: none;" onclick="switchForm('register')">Kayıt Olun</a>
-        </p>
       </div>
 
       <!-- KAYIT FORMU -->
@@ -715,7 +711,7 @@
   </div>
 
   <!-- FIREBASE ENTEGRASYONU & SAYFA MANTIĞI -->
-  <script type="module" src="script.js?v=7"></script>
+  <script type="module" src="script.js?v=9"></script>
     
   </script>
 </body>
