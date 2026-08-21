@@ -23,14 +23,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-function usernameToEmail(username) {
-  const clean = username.trim().toLowerCase()
-    .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
-    .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
-    .replace(/[^a-z0-9]/g, '');
-  return `${clean}@cyhnportal.local`;
-}
-
 // 3. Modal ve Arayüz Yönetimi
 window.openAuthModal = function(mode) {
   document.getElementById('auth-modal')?.classList.remove('hidden');
@@ -123,7 +115,7 @@ window.handleRegister = async function(event) {
   }
 };
 
-// 6. Giriş Yapma
+// 6. Giriş Yapma (Gelişmiş Giriş Kontrolü)
 window.handleLogin = async function(event) {
   event.preventDefault();
   const inputVal = document.getElementById('loginIdentifier')?.value.trim();
@@ -136,18 +128,15 @@ window.handleLogin = async function(event) {
   }
 
   try {
-    let loginEmail = inputVal;
-    if (!inputVal.includes('@')) {
-      loginEmail = usernameToEmail(inputVal);
-    }
-    await signInWithEmailAndPassword(auth, loginEmail, password);
+    // 1. Doğrudan girilen değer (e-posta veya kullanıcı adı) ile denenir
+    await signInWithEmailAndPassword(auth, inputVal, password);
   } catch (error) {
-    try {
-      await signInWithEmailAndPassword(auth, inputVal, password);
-    } catch (secondErr) {
-      console.error("Giriş hatası:", secondErr);
-      showAlert('loginAlert', 'Kullanıcı adı veya şifre hatalı!', 'error');
+    console.error("Giriş hatası:", error);
+    let msg = "Kullanıcı bilgisi veya şifre hatalı!";
+    if (!inputVal.includes('@')) {
+      msg = "Lütfen kayıtlı e-posta adresinizi veya geçerli bilgilerinizi girin!";
     }
+    showAlert('loginAlert', msg, 'error');
   } finally {
     if (btn) {
       btn.disabled = false;
