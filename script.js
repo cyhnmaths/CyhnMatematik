@@ -4,6 +4,7 @@ import {
   getAuth, 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
+  sendPasswordResetEmail,
   updateProfile,
   signOut, 
   onAuthStateChanged 
@@ -22,7 +23,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// 3. Modal ve Form Arayüz Yönetimi
+// 3. Modal ve Arayüz Yönetimi
 window.openAuthModal = function(mode) {
   document.getElementById('auth-modal')?.classList.remove('hidden');
   window.switchAuthMode(mode);
@@ -49,7 +50,6 @@ window.switchAuthMode = function(mode) {
 
 window.switchForm = window.switchAuthMode;
 
-// 4. Uyarı / Hata Kutusu Bildirimi
 function showAlert(containerId, message, type) {
   const alertBox = document.getElementById(containerId);
   if (alertBox) {
@@ -66,14 +66,13 @@ function clearAlerts() {
   if (registerAlert) registerAlert.style.display = 'none';
 }
 
-// 5. Firebase Oturum Takibi
+// 4. Oturum Takibi
 onAuthStateChanged(auth, (user) => {
   if (user) {
     window.closeAuthModal();
     document.getElementById('landing-page')?.classList.add('hidden');
     document.getElementById('dashboard')?.classList.remove('hidden');
     
-    // Kullanıcı adını ekranda gösterme
     const userDisplayName = document.getElementById('userDisplayName');
     if (userDisplayName) {
       userDisplayName.innerText = `@${user.displayName || user.email.split('@')[0]}`;
@@ -84,7 +83,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// 6. Kayıt Olma Fonksiyonu (E-posta, Kullanıcı Adı ve Şifre)
+// 5. Kayıt Olma (E-posta, Kullanıcı Adı ve Şifre)
 window.handleRegister = async function(event) {
   event.preventDefault();
   const email = document.getElementById('regEmail')?.value.trim();
@@ -116,10 +115,10 @@ window.handleRegister = async function(event) {
   }
 };
 
-// 7. Giriş Yapma Fonksiyonu (E-posta ile Giriş)
+// 6. Giriş Yapma (E-posta ve Şifre)
 window.handleLogin = async function(event) {
   event.preventDefault();
-  const loginInput = (document.getElementById('loginEmail') || document.getElementById('loginIdentifier'))?.value.trim();
+  const email = document.getElementById('loginEmail')?.value.trim();
   const password = document.getElementById('loginPassword')?.value;
   const btn = document.getElementById('loginBtn');
 
@@ -129,14 +128,14 @@ window.handleLogin = async function(event) {
   }
 
   try {
-    await signInWithEmailAndPassword(auth, loginInput, password);
+    await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
     console.error("Giriş hatası:", error);
     let msg = "Giriş yapılamadı!";
-    if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-      msg = 'Giriş bilgileri veya şifre hatalı!';
+    if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
+      msg = 'E-posta adresi veya şifre hatalı!';
     } else if (error.code === 'auth/invalid-email') {
-      msg = 'Geçersiz e-posta biçimi!';
+      msg = 'Lütfen geçerli bir e-posta adresi girin!';
     }
     showAlert('loginAlert', msg, 'error');
   } finally {
@@ -147,12 +146,30 @@ window.handleLogin = async function(event) {
   }
 };
 
+// 7. Şifre Sıfırlama E-postası Gönderme
+window.handleResetPassword = async function() {
+  const email = prompt("Lütfen şifre sıfırlama bağlantısının gönderileceği e-posta adresinizi girin:");
+  if (!email) return;
+
+  try {
+    await sendPasswordResetEmail(auth, email.trim());
+    alert("Şifre sıfırlama bağlantısı e-posta adresinize gönderildi!");
+  } catch (error) {
+    console.error("Şifre sıfırlama hatası:", error);
+    if (error.code === 'auth/user-not-found') {
+      alert("Bu e-posta adresiyle kayıtlı bir kullanıcı bulunamadı.");
+    } else {
+      alert("Şifre sıfırlama e-postası gönderilemedi. Lütfen e-posta adresinizi kontrol edin.");
+    }
+  }
+};
+
 // 8. Çıkış Yapma
 window.logout = function() {
   signOut(auth);
 };
 
-// 9. Arayüz ve Navigasyon Fonksiyonları
+// 9. Arayüz ve Ders Navigasyon Mantığı
 window.showWelcomeView = function() {
   document.getElementById('welcomeView')?.classList.remove('hidden');
   document.getElementById('pdfContainer')?.classList.add('hidden');
@@ -170,7 +187,6 @@ window.toggleSidebar = function() {
   overlay?.classList.toggle('hidden');
 };
 
-// 10. Ders Yükleme ve PDF İşlemleri
 window.loadCourse = function(element, title, driveId) {
   document.querySelectorAll('.course-item, .course-list li').forEach(el => el.classList.remove('active'));
   if (element) element.classList.add('active');
@@ -202,13 +218,6 @@ window.loadCourse = function(element, title, driveId) {
 
 window.selectCourse = window.loadCourse;
 
-window.selectCourseFromIndex = function(index) {
-  const items = document.querySelectorAll('.course-item, #courseList .course-item');
-  if (items[index]) {
-    items[index].click();
-  }
-};
-
 window.hideLoader = function() {
   const loader = document.getElementById('pdfLoader');
   if (loader) {
@@ -236,7 +245,7 @@ window.toggleFullscreen = function() {
   }
 };
 
-// 11. Sayfa Güvenlik Önlemleri
+// Sayfa Güvenlik Önlemleri
 document.addEventListener('contextmenu', event => event.preventDefault());
 document.addEventListener('keydown', event => {
   if (
