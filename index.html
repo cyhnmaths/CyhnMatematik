@@ -501,12 +501,12 @@
         <h2 style="margin-bottom: 6px; font-size:1.4rem;">Giriş Yap</h2>
         <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:16px;">Devam etmek için giriş yapın.</p>
         
-        <div id="loginAlert" class="alert-box"></div>
+        <div id="loginAlert" class="alert-box" style="display:none;"></div>
       
         <form onsubmit="handleLogin(event)">
           <div class="input-field">
-            <label>Kullanıcı Adı veya E-posta</label>
-            <input type="text" id="loginIdentifier" placeholder="Kullanıcı adı veya e-posta" required />
+            <label>E-posta Adresi</label>
+            <input type="email" id="loginEmail" placeholder="E-posta adresinizi girin" required />
           </div>
       
           <div class="input-field">
@@ -514,8 +514,16 @@
             <input type="password" id="loginPassword" placeholder="••••••••" required minlength="6" />
           </div>
       
+          <div style="text-align: right; margin-top: 4px;">
+            <a href="#" onclick="handleResetPassword()" style="font-size: 0.8rem; color: var(--accent); text-decoration: none;">Şifremi Unuttum?</a>
+          </div>
+      
           <button type="submit" id="loginBtn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Giriş Yap</button>
         </form>
+      
+        <p style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--text-secondary);">
+          Hesabınız yok mu? <a href="#" style="color: var(--accent); text-decoration: none;" onclick="switchForm('register')">Kayıt Olun</a>
+        </p>
       </div>
 
       <!-- KAYIT FORMU -->
@@ -711,7 +719,7 @@
   </div>
 
   <!-- FIREBASE ENTEGRASYONU & SAYFA MANTIĞI -->
-  <script type="module" src="script.js?v=9"></script>
+  <script type="module" src="script.js?v=13"></script>
     
   </script>
 </body>
