@@ -505,8 +505,8 @@
       
         <form onsubmit="handleLogin(event)">
           <div class="input-field">
-            <label>E-posta Adresi veya Kullanıcı Adı</label>
-            <input type="text" id="loginIdentifier" placeholder="E-posta veya kullanıcı adınız" required />
+            <label>E-posta Adresi</label>
+            <input type="email" id="loginEmail" placeholder="ornek@gmail.com" required />
           </div>
       
           <div class="input-field">
@@ -525,36 +525,33 @@
           Hesabınız yok mu? <a href="#" style="color: var(--accent); text-decoration: none;" onclick="switchForm('register')">Kayıt Olun</a>
         </p>
       </div>
-
+      
       <!-- KAYIT FORMU -->
       <div id="register-form" class="hidden">
-        <h2 style="margin-bottom: 6px; font-size:1.4rem;">Hesap Oluştur</h2>
-        <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:16px;">Notlara erişim sağlamak için kaydolun.</p>
+        <h2 style="margin-bottom: 6px; font-size:1.4rem;">Kayıt Ol</h2>
+        <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:16px;">Yeni bir hesap oluşturun.</p>
         
-        <div id="registerAlert" class="alert-box"></div>
+        <div id="registerAlert" class="alert-box" style="display:none;"></div>
       
         <form onsubmit="handleRegister(event)">
           <div class="input-field">
             <label>E-posta Adresi</label>
             <input type="email" id="regEmail" placeholder="ornek@gmail.com" required />
           </div>
-          <div class="input-field">
-            <label>Kullanıcı Adı</label>
-            <input type="text" id="regUsername" placeholder="Kullanıcı adı belirleyin" required />
-          </div>
+      
           <div class="input-field">
             <label>Şifre</label>
             <input type="password" id="regPassword" placeholder="••••••••" required minlength="6" />
           </div>
+      
           <button type="submit" id="regBtn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Hesap Oluştur</button>
         </form>
+      
         <p style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--text-secondary);">
           Zaten hesabınız var mı? <a href="#" style="color: var(--accent); text-decoration: none;" onclick="switchForm('login')">Giriş Yapın</a>
         </p>
       </div>
-    </div>
-  </div>
-
+      
   <!-- ================= 3. DERS NOTLARI PANELİ (DASHBOARD) ================= -->
   <div id="dashboard" class="dashboard-container hidden">
     <!-- Mobil Arka Plan Karartması -->
@@ -719,7 +716,7 @@
   </div>
 
   <!-- FIREBASE ENTEGRASYONU & SAYFA MANTIĞI -->
- <script type="module" src="script.js?v=16"></script>
+ <script type="module" src="script.js?v=18"></script>
     
   </script>
 </body>
