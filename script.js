@@ -5,7 +5,6 @@ import {
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
   sendPasswordResetEmail,
-  updateProfile,
   signOut, 
   onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -73,9 +72,10 @@ onAuthStateChanged(auth, (user) => {
     document.getElementById('landing-page')?.classList.add('hidden');
     document.getElementById('dashboard')?.classList.remove('hidden');
     
+    // Sağ üstte e-postanın @ öncesi kısmını göster
     const userDisplayName = document.getElementById('userDisplayName');
     if (userDisplayName) {
-      userDisplayName.innerText = `@${user.displayName || user.email.split('@')[0]}`;
+      userDisplayName.innerText = `@${user.email.split('@')[0]}`;
     }
   } else {
     document.getElementById('dashboard')?.classList.add('hidden');
@@ -83,11 +83,10 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// 5. Kayıt Olma
+// 5. Kayıt Olma (Saf E-posta + Şifre)
 window.handleRegister = async function(event) {
   event.preventDefault();
   const email = document.getElementById('regEmail')?.value.trim();
-  const username = document.getElementById('regUsername')?.value.trim();
   const password = document.getElementById('regPassword')?.value;
   const btn = document.getElementById('regBtn');
 
@@ -97,8 +96,7 @@ window.handleRegister = async function(event) {
   }
 
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    await updateProfile(userCredential.user, { displayName: username });
+    await createUserWithEmailAndPassword(auth, email, password);
     showAlert('registerAlert', 'Kayıt başarılı! Yönlendiriliyorsunuz...', 'success');
   } catch (error) {
     console.error("Kayıt hatası:", error);
@@ -115,10 +113,10 @@ window.handleRegister = async function(event) {
   }
 };
 
-// 6. Giriş Yapma (Gelişmiş Giriş Kontrolü)
+// 6. Giriş Yapma (Saf E-posta + Şifre)
 window.handleLogin = async function(event) {
   event.preventDefault();
-  const inputVal = document.getElementById('loginIdentifier')?.value.trim();
+  const email = document.getElementById('loginEmail')?.value.trim();
   const password = document.getElementById('loginPassword')?.value;
   const btn = document.getElementById('loginBtn');
 
@@ -128,14 +126,11 @@ window.handleLogin = async function(event) {
   }
 
   try {
-    // 1. Doğrudan girilen değer (e-posta veya kullanıcı adı) ile denenir
-    await signInWithEmailAndPassword(auth, inputVal, password);
+    await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
     console.error("Giriş hatası:", error);
-    let msg = "Kullanıcı bilgisi veya şifre hatalı!";
-    if (!inputVal.includes('@')) {
-      msg = "Lütfen kayıtlı e-posta adresinizi veya geçerli bilgilerinizi girin!";
-    }
+    let msg = "E-posta veya şifre hatalı!";
+    if (error.code === 'auth/invalid-email') msg = "Geçersiz bir e-posta adresi girdiniz!";
     showAlert('loginAlert', msg, 'error');
   } finally {
     if (btn) {
