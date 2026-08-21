@@ -83,12 +83,21 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// 5. Kayıt Olma (Saf E-posta + Şifre)
+// 5. Kayıt Olma (Saf E-posta + Şifre & Donma Korumalı)
 window.handleRegister = async function(event) {
   event.preventDefault();
-  const email = document.getElementById('regEmail')?.value.trim();
-  const password = document.getElementById('regPassword')?.value;
+
+  const emailInput = document.getElementById('regEmail');
+  const passwordInput = document.getElementById('regPassword');
   const btn = document.getElementById('regBtn');
+
+  const email = emailInput ? emailInput.value.trim() : '';
+  const password = passwordInput ? passwordInput.value : '';
+
+  if (!email || !password) {
+    showAlert('registerAlert', 'Lütfen tüm alanları doldurun!', 'error');
+    return;
+  }
 
   if (btn) {
     btn.disabled = true;
@@ -99,11 +108,19 @@ window.handleRegister = async function(event) {
     await createUserWithEmailAndPassword(auth, email, password);
     showAlert('registerAlert', 'Kayıt başarılı! Yönlendiriliyorsunuz...', 'success');
   } catch (error) {
-    console.error("Kayıt hatası:", error);
+    console.error("Kayıt Hatası:", error);
     let msg = "Kayıt sırasında bir hata oluştu!";
-    if (error.code === 'auth/email-already-in-use') msg = 'Bu e-posta adresi zaten kullanımda!';
-    else if (error.code === 'auth/invalid-email') msg = 'Geçersiz bir e-posta adresi girdiniz!';
-    else if (error.code === 'auth/weak-password') msg = 'Şifre en az 6 karakter olmalıdır!';
+    if (error.code === 'auth/email-already-in-use') {
+      msg = 'Bu e-posta adresi zaten kullanımda!';
+    } else if (error.code === 'auth/invalid-email') {
+      msg = 'Geçersiz bir e-posta adresi girdiniz!';
+    } else if (error.code === 'auth/weak-password') {
+      msg = 'Şifre en az 6 karakter olmalıdır!';
+    } else if (error.code === 'auth/operation-not-allowed') {
+      msg = 'Firebase konsolunda Email/Password yöntemi etkin değil!';
+    } else {
+      msg = `Hata: ${error.message}`;
+    }
     showAlert('registerAlert', msg, 'error');
   } finally {
     if (btn) {
@@ -113,12 +130,21 @@ window.handleRegister = async function(event) {
   }
 };
 
-// 6. Giriş Yapma (Saf E-posta + Şifre)
+// 6. Giriş Yapma (Saf E-posta + Şifre & Donma Korumalı)
 window.handleLogin = async function(event) {
   event.preventDefault();
-  const email = document.getElementById('loginEmail')?.value.trim();
-  const password = document.getElementById('loginPassword')?.value;
+
+  const emailInput = document.getElementById('loginEmail');
+  const passwordInput = document.getElementById('loginPassword');
   const btn = document.getElementById('loginBtn');
+
+  const email = emailInput ? emailInput.value.trim() : '';
+  const password = passwordInput ? passwordInput.value : '';
+
+  if (!email || !password) {
+    showAlert('loginAlert', 'Lütfen e-posta ve şifrenizi girin!', 'error');
+    return;
+  }
 
   if (btn) {
     btn.disabled = true;
@@ -128,9 +154,10 @@ window.handleLogin = async function(event) {
   try {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
-    console.error("Giriş hatası:", error);
+    console.error("Giriş Hatası:", error);
     let msg = "E-posta veya şifre hatalı!";
     if (error.code === 'auth/invalid-email') msg = "Geçersiz bir e-posta adresi girdiniz!";
+    else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') msg = "E-posta veya şifre hatalı!";
     showAlert('loginAlert', msg, 'error');
   } finally {
     if (btn) {
@@ -140,7 +167,7 @@ window.handleLogin = async function(event) {
   }
 };
 
-// 7. Şifre Sıfırlama E-postası Gönderme
+// 7. Şifre Sıfırlama
 window.handleResetPassword = async function() {
   const email = prompt("Lütfen şifre sıfırlama bağlantısının gönderileceği e-posta adresinizi girin:");
   if (!email) return;
@@ -163,14 +190,16 @@ window.logout = function() {
   signOut(auth);
 };
 
-// 9. Arayüz ve Navigasyon Mantığı
+// 9. Dashboard ve PDF Görünüm Yönetimi
 window.showWelcomeView = function() {
   document.getElementById('welcomeView')?.classList.remove('hidden');
   document.getElementById('pdfContainer')?.classList.add('hidden');
   document.getElementById('backToHomeBtn')?.classList.add('hidden');
   document.getElementById('fullscreenBtn')?.classList.add('hidden');
+  
   const activeTitle = document.getElementById('activeCourseTitle') || document.getElementById('current-course-title');
   if (activeTitle) activeTitle.innerText = "Ana Panel";
+  
   document.querySelectorAll('.course-item, .course-list li').forEach(el => el.classList.remove('active'));
 };
 
@@ -239,7 +268,7 @@ window.toggleFullscreen = function() {
   }
 };
 
-// Sayfa Güvenlik Önlemleri
+// 10. Güvenlik Önlemleri
 document.addEventListener('contextmenu', event => event.preventDefault());
 document.addEventListener('keydown', event => {
   if (
