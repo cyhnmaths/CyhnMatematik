@@ -22,10 +22,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Sayfa yüklendiğinde varsayılan olarak giriş/açılış ekranını aktif kıl
+// Sayfa yüklendiğinde varsayılan arayüz durumunu ayarla
 document.addEventListener('DOMContentLoaded', () => {
   const landing = document.getElementById('landing-page');
-  if (landing && landing.classList.contains('hidden')) {
+  if (landing) {
     landing.classList.remove('hidden');
     landing.style.display = 'block';
   }
@@ -33,12 +33,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 3. Modal ve Arayüz Yönetimi
 window.openAuthModal = function(mode) {
-  document.getElementById('auth-modal')?.classList.remove('hidden');
+  const modal = document.getElementById('auth-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+  }
   window.switchAuthMode(mode);
 };
 
 window.closeAuthModal = function() {
-  document.getElementById('auth-modal')?.classList.add('hidden');
+  const modal = document.getElementById('auth-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+  }
   clearAlerts();
 };
 
@@ -48,11 +56,23 @@ window.switchAuthMode = function(mode) {
   const registerForm = document.getElementById('register-form');
 
   if (mode === 'login') {
-    loginForm?.classList.remove('hidden');
-    registerForm?.classList.add('hidden');
+    if (loginForm) {
+      loginForm.classList.remove('hidden');
+      loginForm.style.display = 'block';
+    }
+    if (registerForm) {
+      registerForm.classList.add('hidden');
+      registerForm.style.display = 'none';
+    }
   } else {
-    loginForm?.classList.add('hidden');
-    registerForm?.classList.remove('hidden');
+    if (loginForm) {
+      loginForm.classList.add('hidden');
+      loginForm.style.display = 'none';
+    }
+    if (registerForm) {
+      registerForm.classList.remove('hidden');
+      registerForm.style.display = 'block';
+    }
   }
 };
 
@@ -74,32 +94,38 @@ function clearAlerts() {
   if (registerAlert) registerAlert.style.display = 'none';
 }
 
-// 4. Oturum Takibi (Siyah Ekranı Zorla Engelleyen Yapı)
+// 4. Oturum Takibi (Siyah Ekranı Zorla Engelleyen ve Arayüzü Açan Yapı)
 onAuthStateChanged(auth, (user) => {
   const landing = document.getElementById('landing-page');
   const dashboard = document.getElementById('dashboard') || document.getElementById('app-dashboard');
   const authModal = document.getElementById('auth-modal');
 
   if (user) {
-    // Oturum açıksa modalı kapat, açılış sayfasını gizle, paneli göster
-    if (authModal) authModal.classList.add('hidden');
-
+    // 1. Modalı ve Karşılama Sayfasını Kapat
+    if (authModal) {
+      authModal.classList.add('hidden');
+      authModal.style.display = 'none';
+    }
     if (landing) {
       landing.classList.add('hidden');
       landing.style.display = 'none';
     }
     
+    // 2. Paneli (Dashboard) Ekranı Kaplayacak Şekilde Görünür Yap
     if (dashboard) {
       dashboard.classList.remove('hidden');
-      dashboard.style.display = 'block';
+      dashboard.style.display = 'flex';
+      dashboard.style.opacity = '1';
+      dashboard.style.visibility = 'visible';
     }
 
+    // 3. Kullanıcı adını güncelle
     const userDisplayName = document.getElementById('userDisplayName');
     if (userDisplayName && user.email) {
       userDisplayName.innerText = `@${user.email.split('@')[0]}`;
     }
   } else {
-    // Oturum yoksa paneli gizle, açılış sayfasını göster
+    // Çıkış yapılmışsa paneli gizle, ana sayfayı aç
     if (dashboard) {
       dashboard.classList.add('hidden');
       dashboard.style.display = 'none';
@@ -111,7 +137,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// 5. Kayıt Olma (Kayıt Sonrası Otomatik Çıkış Yapıp Giriş Ekranına Yönlendirir)
+// 5. Kayıt Olma (Kayıt Sonrası Otomatik Çıkış Yapıp Giriş Sayfasına Yönlendirir)
 window.handleRegister = async function(event) {
   event.preventDefault();
 
@@ -136,17 +162,17 @@ window.handleRegister = async function(event) {
     // 1. Hesabı oluştur
     await createUserWithEmailAndPassword(auth, email, password);
     
-    // 2. Otomatik açılan oturumu kapat (Panele geçişi engellemek için)
+    // 2. Otomatik açılan oturumu kapat (Doğrudan panele geçişi önlemek için)
     await signOut(auth);
 
     // 3. Bilgilendirme mesajı ver
     showAlert('registerAlert', 'Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...', 'success');
 
-    // 4. Form kutularını sıfırla
+    // 4. Form kutularını temızle
     if (emailInput) emailInput.value = '';
     if (passwordInput) passwordInput.value = '';
 
-    // 5. 2 saniye sonra Giriş moduna geç ve kaydolunan e-postayı doldur
+    // 5. 2 saniye sonra Giriş moduna geç ve e-postayı hazır doldur
     setTimeout(() => {
       window.switchAuthMode('login');
       const loginEmailInput = document.getElementById('loginEmail');
