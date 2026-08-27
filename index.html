@@ -140,9 +140,16 @@
     /* --- DASHBOARD --- */
     .dashboard-container { display: flex; height: 100vh; width: 100vw; overflow: hidden; position: fixed; top: 0; left: 0; z-index: 200; background: var(--bg-main); }
 
+    /* Mobile Overlay Backdrop */
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px); z-index: 205;
+    }
+    .sidebar-overlay.active { display: block; }
+
     /* Sidebar Akordiyon Menü */
-    .sidebar { width: 320px; background: var(--bg-surface); border-right: 1px solid var(--border-glass); display: flex; flex-direction: column; }
-    .sidebar-brand { padding: 20px; border-bottom: 1px solid var(--border-glass); display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    .sidebar { width: 320px; background: var(--bg-surface); border-right: 1px solid var(--border-glass); display: flex; flex-direction: column; transition: var(--transition); }
+    .sidebar-brand { padding: 20px; border-bottom: 1px solid var(--border-glass); display: flex; align-items: center; justify-content: space-between; }
     
     .course-menu { flex: 1; overflow-y: auto; padding: 12px 10px; }
     
@@ -173,6 +180,8 @@
     .main-workspace { flex: 1; display: flex; flex-direction: column; background: var(--bg-main); overflow-y: auto; }
     .workspace-header { padding: 14px 20px; background: var(--bg-surface); border-bottom: 1px solid var(--border-glass); display: flex; justify-content: space-between; align-items: center; }
 
+    .mobile-menu-toggle { display: none; background: rgba(99, 102, 241, 0.15); color: var(--accent); border: 1px solid rgba(99, 102, 241, 0.3); width: 38px; height: 38px; border-radius: 8px; align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer; }
+
     .welcome-container { padding: 30px 5%; max-width: 1200px; margin: 0 auto; width: 100%; }
     .welcome-banner {
       background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
@@ -195,7 +204,8 @@
 
     @media (max-width: 768px) {
       .hero h1 { font-size: 1.9rem; }
-      .sidebar { position: fixed; top: 0; left: 0; height: 100vh; transform: translateX(-100%); transition: var(--transition); z-index: 210; }
+      .mobile-menu-toggle { display: flex; }
+      .sidebar { position: fixed; top: 0; left: 0; height: 100vh; transform: translateX(-100%); z-index: 210; }
       .sidebar.open { transform: translateX(0); }
     }
   </style>
@@ -278,19 +288,27 @@
   <!-- 3. DASHBOARD -->
   <div id="dashboard" class="dashboard-container hidden">
     
-    <!-- AKORDİON SİDEBAR -->
+    <!-- MOBİL İÇİN ARKA PLAN OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- SİDEBAR -->
     <aside class="sidebar" id="sidebar">
-      <div class="sidebar-brand" onclick="showWelcomeView()">
-        <div class="logo-icon"><i class="fa-solid fa-square-root-variable"></i></div>
-        <div>
-          <h3 style="font-size: 0.95rem; font-weight:700;">CYHN Portal</h3>
-          <p style="font-size: 0.72rem; color: var(--text-secondary);">Matematik Bölümü</p>
+      <div class="sidebar-brand">
+        <div style="display:flex; align-items:center; gap:12px; cursor:pointer;" onclick="showWelcomeView()">
+          <div class="logo-icon"><i class="fa-solid fa-square-root-variable"></i></div>
+          <div>
+            <h3 style="font-size: 0.95rem; font-weight:700;">CYHN Portal</h3>
+            <p style="font-size: 0.72rem; color: var(--text-secondary);">Matematik Bölümü</p>
+          </div>
         </div>
+        <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
 
       <nav class="course-menu">
         
-        <!-- Güncel Duyurular Kategori -->
+        <!-- Güncel Duyurular -->
         <div class="acc-header" onclick="toggleAccordion('acc-duyuru', this)">
           <span><i class="fa-solid fa-bullhorn" style="margin-right: 8px; color: #f59e0b;"></i> Duyurular & Takvim</span>
           <i class="fa-solid fa-chevron-down chevron"></i>
@@ -332,20 +350,34 @@
           </div>
         </div>
 
-        <!-- Tekli Dersler -->
-        <div class="acc-header" onclick="toggleAccordion('acc-diger', this)">
-          <span><i class="fa-solid fa-shapes" style="margin-right: 8px; color: #8b5cf6;"></i> Diğer Dersler</span>
+        <!-- BAĞIMSIZ BAŞLIKLAR -->
+        <div class="acc-header" onclick="toggleAccordion('acc-soyut', this)">
+          <span><i class="fa-solid fa-atom" style="margin-right: 8px; color: #8b5cf6;"></i> Soyut Matematik</span>
           <i class="fa-solid fa-chevron-down chevron"></i>
         </div>
-        <div class="acc-body" id="acc-diger">
-          <div class="course-item" onclick="loadCourse(this, 'Soyut Matematik', 'DRIVE_ID_SOYUT')">
-            <i class="fa-solid fa-atom"></i> Soyut Matematik
+        <div class="acc-body" id="acc-soyut">
+          <div class="course-item" onclick="loadCourse(this, 'Soyut Matematik Notları', 'DRIVE_ID_SOYUT')">
+            <i class="fa-solid fa-file-pdf"></i> Soyut Matematik Notları
           </div>
-          <div class="course-item" onclick="loadCourse(this, 'Analitik Geometri', 'DRIVE_ID_ANALITIK')">
-            <i class="fa-solid fa-draw-polygon"></i> Analitik Geometri
+        </div>
+
+        <div class="acc-header" onclick="toggleAccordion('acc-analitik', this)">
+          <span><i class="fa-solid fa-draw-polygon" style="margin-right: 8px; color: #ec4899;"></i> Analitik Geometri</span>
+          <i class="fa-solid fa-chevron-down chevron"></i>
+        </div>
+        <div class="acc-body" id="acc-analitik">
+          <div class="course-item" onclick="loadCourse(this, 'Analitik Geometri Notları', 'DRIVE_ID_ANALITIK')">
+            <i class="fa-solid fa-file-pdf"></i> Analitik Geometri Notları
           </div>
-          <div class="course-item" onclick="loadCourse(this, 'Algoritma ve Programlama', 'DRIVE_ID_ALGORITMA')">
-            <i class="fa-solid fa-code"></i> Algoritma ve Prog.
+        </div>
+
+        <div class="acc-header" onclick="toggleAccordion('acc-algoritma', this)">
+          <span><i class="fa-solid fa-code" style="margin-right: 8px; color: #06b6d4;"></i> Algoritma & Prog.</span>
+          <i class="fa-solid fa-chevron-down chevron"></i>
+        </div>
+        <div class="acc-body" id="acc-algoritma">
+          <div class="course-item" onclick="loadCourse(this, 'Algoritma ve Programlama Notları', 'DRIVE_ID_ALGORITMA')">
+            <i class="fa-solid fa-file-pdf"></i> Algoritma Notları
           </div>
         </div>
 
@@ -362,18 +394,26 @@
     <main class="main-workspace">
       <header class="workspace-header">
         <div style="display: flex; align-items: center; gap: 10px;">
+          <!-- MOBİL MENÜ BUTONU -->
+          <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+
           <button class="btn btn-glass" id="backToHomeBtn" onclick="showWelcomeView()">
             <i class="fa-solid fa-house"></i>
           </button>
-          <h2 id="activeCourseTitle">Ana Panel</h2>
+          <h2 id="activeCourseTitle" style="font-size: 1.1rem;">Ana Panel</h2>
         </div>
       </header>
 
-      <!-- KARŞILAMA VE İLETİŞİM EKRANI -->
+      <!-- KARŞILAMA EKRANI -->
       <div id="welcomeView" class="welcome-container">
         <div class="welcome-banner">
           <h2>Hoş Geldiniz 👋</h2>
-          <p>Sol taraftaki menüden incelemek istediğiniz ders kategorisini veya güncel duyuruları seçebilirsiniz.</p>
+          <p>Ders materyallerine ve akademik takvime erişmek için menüyü kullanabilirsiniz.</p>
+          <button class="btn btn-primary mobile-menu-toggle" style="display: inline-flex; margin-top: 12px;" onclick="toggleSidebar()">
+            <i class="fa-solid fa-list-ul"></i> Ders Menüsünü Aç
+          </button>
         </div>
 
         <!-- İLETİŞİM & DESTEK KANALLARI -->
@@ -422,6 +462,14 @@
   </div>
 
   <script>
+    // Mobil Sidebar Aç/Kapa
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    }
+
     // Akordiyon Menü Geçişleri
     function toggleAccordion(id, element) {
       const body = document.getElementById(id);
@@ -445,7 +493,7 @@
       document.getElementById('auth-modal').classList.add('hidden');
     }
 
-    // Geçici Giriş / Panel Görünümü
+    // Giriş / Çıkış Görünümü
     function handleLogin(e) {
       e.preventDefault();
       closeAuthModal();
@@ -472,9 +520,14 @@
       document.getElementById('welcomeView').classList.add('hidden');
       document.getElementById('pdfContainer').classList.remove('hidden');
 
-      // Google Drive Embed Yapısı
+      // Google Drive Embed URL
       const embedUrl = `https://drive.google.com/file/d/${driveId}/preview`;
       document.getElementById('pdfFrame').src = embedUrl;
+
+      // Mobilde ders seçilince menüyü otomatik kapat
+      if (window.innerWidth <= 768) {
+        toggleSidebar();
+      }
     }
 
     function showWelcomeView() {
@@ -482,6 +535,11 @@
       document.getElementById('pdfContainer').classList.add('hidden');
       document.getElementById('welcomeView').classList.remove('hidden');
       document.querySelectorAll('.course-item').forEach(item => item.classList.remove('active'));
+      
+      if (window.innerWidth <= 768) {
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar.classList.contains('open')) toggleSidebar();
+      }
     }
   </script>
 </body>
