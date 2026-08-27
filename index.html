@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CYHN Matematik Portalı - Akademik Notlar</title>
   
+  <!-- Website Favicon / Sekme Simgesi -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%236366f1'/><path d='M25 50 L40 50 L50 25 L60 75 L70 50 L80 50' stroke='white' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -99,9 +102,10 @@
     }
 
     .logo-icon {
-      width: 34px; height: 34px; background: linear-gradient(135deg, var(--accent), #8b5cf6);
-      border-radius: 8px; display: flex; align-items: center; justify-content: center;
-      color: white; font-size: 1rem; box-shadow: 0 4px 15px var(--accent-glow);
+      width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent), #8b5cf6);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 1.1rem; box-shadow: 0 4px 15px var(--accent-glow);
+      -webkit-text-fill-color: initial;
     }
 
     /* --- HERO --- */
@@ -139,6 +143,9 @@
 
     .error-msg {
       color: #ef4444; font-size: 0.8rem; margin-bottom: 12px; display: none;
+    }
+    .success-msg {
+      color: #4ade80; font-size: 0.8rem; margin-bottom: 12px; display: none;
     }
 
     /* --- DASHBOARD --- */
@@ -180,10 +187,7 @@
     .main-workspace { flex: 1; display: flex; flex-direction: column; background: var(--bg-main); overflow-y: auto; }
     .workspace-header { padding: 14px 20px; background: var(--bg-surface); border-bottom: 1px solid var(--border-glass); display: flex; justify-content: space-between; align-items: center; }
 
-    /* MOBİL MENÜ ELEMANLARI (PC'DE GİZLİ) */
-    .mobile-menu-toggle, .mobile-only-btn {
-      display: none !important;
-    }
+    .mobile-menu-toggle, .mobile-only-btn { display: none !important; }
 
     .welcome-container { padding: 30px 5%; max-width: 1200px; margin: 0 auto; width: 100%; }
     .welcome-banner {
@@ -203,7 +207,6 @@
     .pdf-iframe-wrapper { flex: 1; width: 100%; height: 100%; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-glass); background: #1e293b; }
     iframe { width: 100%; height: 100%; border: none; }
 
-    /* YALNIZCA MOBİL EKRANDA (MAX 768PX) GÖRÜNÜR */
     @media (max-width: 768px) {
       .hero h1 { font-size: 1.9rem; }
       .mobile-menu-toggle {
@@ -214,9 +217,7 @@
         width: 38px; height: 38px; border-radius: 8px;
         align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer;
       }
-      .mobile-only-btn {
-        display: inline-flex !important;
-      }
+      .mobile-only-btn { display: inline-flex !important; }
       .sidebar { position: fixed; top: 0; left: 0; height: 100vh; transform: translateX(-100%); z-index: 210; }
       .sidebar.open { transform: translateX(0); }
     }
@@ -224,7 +225,7 @@
 </head>
 <body>
 
-  <!-- EN ÜST GELİŞTİRİCİ BARI -->
+  <!-- DEVELOPER TOPBAR -->
   <div class="developer-topbar">
     <div class="topbar-content">
       <span class="dev-name">Muharrem CEYHAN</span>
@@ -233,11 +234,12 @@
     </div>
   </div>
 
-  <!-- 1. LANDING PAGE -->
+  <!-- LANDING PAGE -->
   <div id="landing-page">
     <nav class="navbar">
+      <!-- SOL ÜST LOGO & BAŞLIK -->
       <div class="logo">
-        <div class="logo-icon"><i class="fa-solid fa-square-root-variable"></i></div>
+        <div class="logo-icon"><i class="fa-solid fa-infinity"></i></div>
         <span>CYHN Matematik</span>
       </div>
       <div>
@@ -258,14 +260,16 @@
     </main>
   </div>
 
-  <!-- 2. AUTH MODAL -->
+  <!-- AUTH MODAL -->
   <div id="auth-modal" class="modal-overlay hidden">
     <div class="modal-card">
       <button class="close-modal" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
 
+      <!-- GİRİŞ FORM -->
       <div id="login-form">
         <h2 style="margin-bottom: 6px;">Giriş Yap</h2>
         <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:16px;">Devam etmek için hesabınıza erişin.</p>
+        <div id="loginSuccess" class="success-msg"></div>
         <div id="loginError" class="error-msg">Giriş başarısız. E-posta veya şifre hatalı.</div>
         <form onsubmit="handleLogin(event)">
           <div class="input-field">
@@ -280,6 +284,7 @@
         </form>
       </div>
 
+      <!-- KAYIT FORM -->
       <div id="register-form" class="hidden">
         <h2 style="margin-bottom: 6px;">Kayıt Ol</h2>
         <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:16px;">Yeni bir hesap oluşturun.</p>
@@ -299,16 +304,14 @@
     </div>
   </div>
 
-  <!-- 3. DASHBOARD -->
+  <!-- DASHBOARD -->
   <div id="dashboard" class="dashboard-container hidden">
-    
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-    <!-- SİDEBAR -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-brand">
         <div style="display:flex; align-items:center; gap:12px; cursor:pointer;" onclick="showWelcomeView()">
-          <div class="logo-icon"><i class="fa-solid fa-square-root-variable"></i></div>
+          <div class="logo-icon"><i class="fa-solid fa-infinity"></i></div>
           <div>
             <h3 style="font-size: 0.95rem; font-weight:700;">CYHN Portal</h3>
             <p style="font-size: 0.72rem; color: var(--text-secondary);">Matematik Bölümü</p>
@@ -397,7 +400,6 @@
       </div>
     </aside>
 
-    <!-- SAĞ ÇALIŞMA ALANI -->
     <main class="main-workspace">
       <header class="workspace-header">
         <div style="display: flex; align-items: center; gap: 10px;">
@@ -411,7 +413,6 @@
         </div>
       </header>
 
-      <!-- KARŞILAMA EKRANI -->
       <div id="welcomeView" class="welcome-container">
         <div class="welcome-banner">
           <h2>Hoş Geldiniz 👋</h2>
@@ -459,7 +460,6 @@
         </div>
       </div>
     </main>
-
   </div>
 
   <!-- FIREBASE SDK & AUTH INTEGRATION -->
@@ -467,7 +467,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    // GERÇEK FIREBASE YAPILANDIRMANIZ
     const firebaseConfig = {
       apiKey: "AIzaSyA0lZFiA-HcJ0CiEgSVvqUaJu0g9xIK7CQ",
       authDomain: "cyhnportal.firebaseapp.com",
@@ -480,7 +479,6 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Oturum Durumu Takibi
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.getElementById('landing-page').classList.add('hidden');
@@ -491,14 +489,16 @@
       }
     });
 
-    // Giriş Fonksiyonu
     window.handleLogin = async function(e) {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value;
       const pass = document.getElementById('loginPassword').value;
       const errorDiv = document.getElementById('loginError');
+      const successDiv = document.getElementById('loginSuccess');
       
       errorDiv.style.display = "none";
+      successDiv.style.display = "none";
+
       try {
         await signInWithEmailAndPassword(auth, email, pass);
         closeAuthModal();
@@ -508,7 +508,7 @@
       }
     };
 
-    // Kayıt Fonksiyonu
+    // KAYIT OLUNDUKTAN SONRA OTOMATİK OTURUMU KAPATIP GİRİŞ EKRANINA YÖNLENDİRİR
     window.handleRegister = async function(e) {
       e.preventDefault();
       const email = document.getElementById('regEmail').value;
@@ -518,14 +518,23 @@
       errorDiv.style.display = "none";
       try {
         await createUserWithEmailAndPassword(auth, email, pass);
-        closeAuthModal();
+        // Otomatik girişi engellemek için oturumu hemen kapatıyoruz
+        await signOut(auth);
+        
+        // Formları sıfırla ve Giriş ekranına geçiş yaptır
+        document.getElementById('regEmail').value = "";
+        document.getElementById('regPassword').value = "";
+        
+        openAuthModal('login');
+        const successDiv = document.getElementById('loginSuccess');
+        successDiv.innerText = "Kaydınız başarıyla oluşturuldu! Lütfen giriş yapın.";
+        successDiv.style.display = "block";
       } catch (err) {
         errorDiv.innerText = "Kayıt oluşturulamadı: " + err.message;
         errorDiv.style.display = "block";
       }
     };
 
-    // Çıkış Fonksiyonu
     window.logout = function() {
       signOut(auth);
     };
@@ -548,6 +557,7 @@
     function openAuthModal(type) {
       document.getElementById('auth-modal').classList.remove('hidden');
       document.getElementById('loginError').style.display = "none";
+      document.getElementById('loginSuccess').style.display = "none";
       document.getElementById('regError').style.display = "none";
       
       if (type === 'login') {
