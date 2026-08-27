@@ -94,13 +94,16 @@ function clearAlerts() {
   if (registerAlert) registerAlert.style.display = 'none';
 }
 
-// 4. Oturum Takibi (Siyah Ekranı Zorla Engelleyen ve Arayüzü Açan Yapı)
+// 4. Oturum Takibi (Body tetiklemesi ile mavi ekran kilitlenmesini önleyen yapı)
 onAuthStateChanged(auth, (user) => {
   const landing = document.getElementById('landing-page');
   const dashboard = document.getElementById('dashboard') || document.getElementById('app-dashboard');
   const authModal = document.getElementById('auth-modal');
 
   if (user) {
+    // Body sınıfı ekleyerek CSS çakışmasını engelle
+    document.body.classList.add('user-logged-in');
+
     // 1. Modalı ve Karşılama Sayfasını Kapat
     if (authModal) {
       authModal.classList.add('hidden');
@@ -125,7 +128,9 @@ onAuthStateChanged(auth, (user) => {
       userDisplayName.innerText = `@${user.email.split('@')[0]}`;
     }
   } else {
-    // Çıkış yapılmışsa paneli gizle, ana sayfayı aç
+    // Çıkış yapılmışsa body sınıfını kaldır ve ana sayfayı aç
+    document.body.classList.remove('user-logged-in');
+
     if (dashboard) {
       dashboard.classList.add('hidden');
       dashboard.style.display = 'none';
@@ -168,7 +173,7 @@ window.handleRegister = async function(event) {
     // 3. Bilgilendirme mesajı ver
     showAlert('registerAlert', 'Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...', 'success');
 
-    // 4. Form kutularını temızle
+    // 4. Form kutularını temizle
     if (emailInput) emailInput.value = '';
     if (passwordInput) passwordInput.value = '';
 
