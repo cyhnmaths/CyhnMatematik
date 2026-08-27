@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AcademiaNotes - Akademik Ders Notları Portalı</title>
+  <title>CYHN Matematik Portalı - Akademik Notlar</title>
   
-  <!-- Modern Font & FontAwesome İkonları -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -18,7 +17,6 @@
       --bg-card: rgba(30, 41, 59, 0.6);
       --accent: #6366f1;
       --accent-glow: rgba(99, 102, 241, 0.35);
-      --accent-hover: #4f46e5;
       --text-primary: #f8fafc;
       --text-secondary: #94a3b8;
       --border-glass: rgba(255, 255, 255, 0.08);
@@ -26,15 +24,10 @@
       --radius-md: 10px;
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       --danger: #ef4444;
-      --success: #10b981;
+      --whatsapp: #25d366;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
 
     body {
       background-color: var(--bg-main);
@@ -48,434 +41,182 @@
 
     .hidden { display: none !important; }
 
+    /* --- DEVELOPER TOPBAR --- */
+    .developer-topbar {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.9);
+      border-bottom: 1px solid var(--border-glass);
+      backdrop-filter: blur(8px);
+      padding: 7px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.75rem;
+      position: relative;
+      z-index: 60;
+    }
+
+    .topbar-content { display: flex; align-items: center; gap: 12px; }
+    .dev-name { color: #f8fafc; font-weight: 600; }
+    .topbar-divider { color: var(--accent); opacity: 0.6; }
+    .dev-title { color: var(--text-secondary); font-weight: 700; letter-spacing: 1.5px; font-size: 0.7rem; }
+
     /* --- BUTONLAR --- */
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 10px 20px;
-      border-radius: var(--radius-md);
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: var(--transition);
-      border: 1px solid transparent;
-      outline: none;
-      white-space: nowrap;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 10px 20px; border-radius: var(--radius-md); font-weight: 600;
+      font-size: 0.9rem; cursor: pointer; transition: var(--transition);
+      border: 1px solid transparent; outline: none; text-decoration: none;
     }
 
     .btn-primary {
       background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
-      color: #fff;
-      box-shadow: 0 4px 20px var(--accent-glow);
-    }
-
-    .btn-primary:hover {
-      opacity: 0.95;
-      transform: translateY(-1px);
+      color: #fff; box-shadow: 0 4px 20px var(--accent-glow);
     }
 
     .btn-glass {
-      background: var(--bg-card);
-      color: var(--text-primary);
-      border: 1px solid var(--border-glass);
-      backdrop-filter: blur(10px);
+      background: var(--bg-card); color: var(--text-primary);
+      border: 1px solid var(--border-glass); backdrop-filter: blur(10px);
     }
 
-    .btn-danger {
-      background: rgba(239, 68, 68, 0.15);
-      color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.2);
-    }
+    .btn-danger { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
+    .btn-danger:hover { background: var(--danger); color: #fff; }
 
-    .btn-danger:hover {
-      background: var(--danger);
-      color: #fff;
-    }
+    .btn-whatsapp { background: rgba(37, 211, 102, 0.15); color: #4ade80; border: 1px solid rgba(37, 211, 102, 0.3); }
+    .btn-whatsapp:hover { background: var(--whatsapp); color: #000; }
 
     /* --- NAVBAR --- */
     .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 5%;
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border-glass);
-      position: sticky;
-      top: 0;
-      z-index: 50;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 5%; backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-glass);
+      position: sticky; top: 0; z-index: 50;
     }
 
     .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.2rem;
-      font-weight: 800;
+      display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 800;
       background: linear-gradient(135deg, #fff 30%, var(--text-secondary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
 
     .logo-icon {
-      width: 34px;
-      height: 34px;
-      background: linear-gradient(135deg, var(--accent), #8b5cf6);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 1rem;
-      box-shadow: 0 4px 15px var(--accent-glow);
+      width: 34px; height: 34px; background: linear-gradient(135deg, var(--accent), #8b5cf6);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 1rem; box-shadow: 0 4px 15px var(--accent-glow);
     }
 
-    /* --- HERO SECTION --- */
+    /* --- HERO --- */
     .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      min-height: calc(100vh - 70px);
-      padding: 40px 20px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
-      border-radius: 30px;
-      background: rgba(99, 102, 241, 0.1);
-      border: 1px solid rgba(99, 102, 241, 0.3);
-      color: #a5b4fc;
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin-bottom: 20px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; min-height: calc(100vh - 110px); padding: 40px 20px;
     }
 
     .hero h1 {
-      font-size: 2.8rem;
-      font-weight: 800;
-      line-height: 1.2;
-      max-width: 800px;
-      margin-bottom: 16px;
+      font-size: 2.8rem; font-weight: 800; line-height: 1.2; max-width: 800px; margin-bottom: 16px;
       background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
 
-    .hero p {
-      font-size: 1.05rem;
-      color: var(--text-secondary);
-      max-width: 600px;
-      line-height: 1.6;
-      margin-bottom: 30px;
-    }
+    .hero p { font-size: 1.05rem; color: var(--text-secondary); max-width: 600px; margin-bottom: 30px; }
 
     /* --- MODAL --- */
     .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(4, 7, 13, 0.85);
-      backdrop-filter: blur(12px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      padding: 16px;
+      position: fixed; inset: 0; background: rgba(4, 7, 13, 0.85); backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px;
     }
 
     .modal-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      width: 100%;
-      max-width: 400px;
-      position: relative;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      background: var(--bg-surface); border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg); padding: 28px; width: 100%; max-width: 400px; position: relative;
     }
 
-    .close-modal {
-      position: absolute;
-      top: 18px; right: 18px;
-      background: none; border: none;
-      color: var(--text-secondary);
-      font-size: 1.2rem; cursor: pointer;
-    }
-
+    .close-modal { position: absolute; top: 18px; right: 18px; background: none; border: none; color: var(--text-secondary); font-size: 1.2rem; cursor: pointer; }
     .input-field { margin-bottom: 16px; }
     .input-field label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
     .input-field input {
-      width: 100%; padding: 12px;
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-md);
-      color: #fff; font-size: 0.9rem; outline: none;
-      transition: var(--transition);
-    }
-    .input-field input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+      width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-glass); border-radius: var(--radius-md); color: #fff; outline: none;
     }
 
-    .alert-box {
-      padding: 10px 14px;
-      border-radius: var(--radius-md);
-      font-size: 0.82rem;
-      margin-bottom: 14px;
-      display: none;
-    }
-    .alert-error {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #fca5a5;
-    }
-    .alert-success {
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      color: #6ee7b7;
-    }
+    /* --- DASHBOARD --- */
+    .dashboard-container { display: flex; height: 100vh; width: 100vw; overflow: hidden; position: fixed; top: 0; left: 0; z-index: 200; background: var(--bg-main); }
 
-    /* --- DASHBOARD LAYOUT --- */
-    .dashboard-container {
-      display: flex;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 200;
-      background: var(--bg-main);
-    }
-
-    /* Sidebar */
-    .sidebar {
-      width: 300px;
-      background: var(--bg-surface);
-      border-right: 1px solid var(--border-glass);
-      display: flex;
-      flex-direction: column;
-      backdrop-filter: blur(16px);
-      z-index: 80;
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .sidebar-brand {
-      padding: 20px;
-      border-bottom: 1px solid var(--border-glass);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-    }
-
-    .search-box { padding: 14px 16px; border-bottom: 1px solid var(--border-glass); }
-    .search-input-wrapper { position: relative; }
-    .search-input-wrapper i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
-    .search-input-wrapper input {
-      width: 100%; padding: 10px 10px 10px 36px;
-      background: rgba(15, 23, 42, 0.5);
-      border: 1px solid var(--border-glass);
-      border-radius: 8px; color: #fff; font-size: 0.85rem; outline: none;
-    }
-
+    /* Sidebar Akordiyon Menü */
+    .sidebar { width: 320px; background: var(--bg-surface); border-right: 1px solid var(--border-glass); display: flex; flex-direction: column; }
+    .sidebar-brand { padding: 20px; border-bottom: 1px solid var(--border-glass); display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    
     .course-menu { flex: 1; overflow-y: auto; padding: 12px 10px; }
-    .menu-category { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); padding: 8px 10px; }
+    
+    /* Category Accordion Header */
+    .acc-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 14px; border-radius: var(--radius-md); cursor: pointer;
+      color: var(--text-primary); font-weight: 600; font-size: 0.88rem;
+      transition: var(--transition); margin-top: 4px;
+    }
+    .acc-header:hover { background: rgba(255, 255, 255, 0.04); }
+    .acc-header i.chevron { transition: transform 0.3s ease; font-size: 0.75rem; color: var(--text-secondary); }
+    .acc-header.active i.chevron { transform: rotate(180deg); }
+
+    .acc-body { padding-left: 12px; display: none; margin-top: 2px; }
+    .acc-body.open { display: block; }
 
     .course-item {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px; border-radius: var(--radius-md); margin-bottom: 4px;
-      cursor: pointer; color: var(--text-secondary); transition: var(--transition);
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+      border-radius: 8px; cursor: pointer; color: var(--text-secondary);
+      font-size: 0.83rem; font-weight: 500; transition: var(--transition); margin-bottom: 2px;
     }
-
-    .course-item-title { display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 0.88rem; }
     .course-item:hover, .course-item.active { background: rgba(99, 102, 241, 0.15); color: #fff; }
-    .course-item.active i { color: var(--accent); }
 
     .sidebar-footer { padding: 16px; border-top: 1px solid var(--border-glass); }
-    .user-badge {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-      padding: 8px 10px;
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 8px;
-      border: 1px solid var(--border-glass);
-    }
-    .user-badge i { color: var(--accent); font-size: 1.1rem; }
-    .user-badge span { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); }
 
-    /* Main Area / Workspace */
-    .main-workspace {
-      flex: 1; display: flex; flex-direction: column;
-      background: var(--bg-main); position: relative; width: 100%;
-      overflow-y: auto;
-    }
+    /* Main Workspace */
+    .main-workspace { flex: 1; display: flex; flex-direction: column; background: var(--bg-main); overflow-y: auto; }
+    .workspace-header { padding: 14px 20px; background: var(--bg-surface); border-bottom: 1px solid var(--border-glass); display: flex; justify-content: space-between; align-items: center; }
 
-    .workspace-header {
-      padding: 14px 20px;
-      background: var(--bg-surface);
-      border-bottom: 1px solid var(--border-glass);
-      display: flex; justify-content: space-between; align-items: center;
-      position: sticky; top: 0; z-index: 10;
-    }
-
-    .workspace-title { display: flex; align-items: center; gap: 10px; }
-    .workspace-title h2 { font-size: 1.05rem; font-weight: 700; }
-
-    /* --- KARŞILAMA / DERS KARTLARI EKRANI (WELCOME VIEW) --- */
-    .welcome-container {
-      padding: 30px 5%;
-      max-width: 1200px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
+    .welcome-container { padding: 30px 5%; max-width: 1200px; margin: 0 auto; width: 100%; }
     .welcome-banner {
       background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
-      border: 1px solid rgba(99, 102, 241, 0.25);
-      border-radius: var(--radius-lg);
-      padding: 24px 28px;
-      margin-bottom: 30px;
+      border: 1px solid rgba(99, 102, 241, 0.25); border-radius: var(--radius-lg); padding: 28px; margin-bottom: 30px;
     }
 
-    .welcome-banner h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; }
-    .welcome-banner p { color: var(--text-secondary); font-size: 0.95rem; }
-
-    .section-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    /* Contact Card Structure */
+    .contact-card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 16px; }
+    .contact-box {
+      background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: var(--radius-md);
+      padding: 20px; display: flex; align-items: center; gap: 16px; transition: var(--transition);
     }
+    .contact-box:hover { border-color: rgba(99, 102, 241, 0.4); }
+    .contact-icon { width: 46px; height: 46px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
 
-    .course-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 20px;
-    }
-
-    .course-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      cursor: pointer;
-      transition: var(--transition);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .course-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(99, 102, 241, 0.4);
-      box-shadow: 0 12px 30px -10px rgba(99, 102, 241, 0.2);
-    }
-
-    .card-icon {
-      width: 44px; height: 44px;
-      border-radius: var(--radius-md);
-      background: rgba(99, 102, 241, 0.15);
-      color: var(--accent);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem; margin-bottom: 14px;
-    }
-
-    .course-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
-    .course-card p { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 16px; }
-
-    .card-action {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--accent);
-      padding-top: 12px;
-      border-top: 1px solid var(--border-glass);
-    }
-
-    /* --- PDF GÖRÜNTÜLEYİCİ EKRANI --- */
-    .pdf-container {
-      flex: 1; padding: 16px; position: relative;
-      display: flex; flex-direction: column; height: calc(100vh - 65px);
-    }
-
-    .pdf-loader {
-      position: absolute; inset: 16px; background: var(--bg-main);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 12px; border-radius: var(--radius-lg); z-index: 10; transition: opacity 0.3s ease;
-    }
-
-    .spinner {
-      width: 36px; height: 36px;
-      border: 3px solid rgba(99, 102, 241, 0.2); border-top-color: var(--accent);
-      border-radius: 50%; animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .pdf-iframe-wrapper {
-      flex: 1; width: 100%; height: 100%;
-      border-radius: var(--radius-lg); overflow: hidden;
-      border: 1px solid var(--border-glass); background: #1e293b;
-      position: relative;
-    }
-
-    .pdf-iframe-wrapper::after {
-      content: ''; position: absolute; top: 0; right: 0;
-      width: 60px; height: 60px; background: transparent; z-index: 20;
-    }
-
+    /* PDF View */
+    .pdf-container { flex: 1; padding: 16px; display: flex; flex-direction: column; height: calc(100vh - 65px); position: relative; }
+    .pdf-iframe-wrapper { flex: 1; width: 100%; height: 100%; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-glass); background: #1e293b; }
     iframe { width: 100%; height: 100%; border: none; }
 
-    .mobile-menu-btn { display: none; }
-    .sidebar-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(4px); z-index: 75;
-    }
-
-    /* MOBİL UYUM (RESPONSIVE) */
     @media (max-width: 768px) {
       .hero h1 { font-size: 1.9rem; }
-      .hero p { font-size: 0.95rem; }
-      
-      .mobile-menu-btn { display: inline-flex !important; }
-
-      .sidebar {
-        position: fixed; top: 0; left: 0; height: 100vh;
-        transform: translateX(-100%);
-      }
-
+      .sidebar { position: fixed; top: 0; left: 0; height: 100vh; transform: translateX(-100%); transition: var(--transition); z-index: 210; }
       .sidebar.open { transform: translateX(0); }
-
-      .welcome-container { padding: 20px 16px; }
-      .pdf-container { padding: 8px; }
-      .workspace-header { padding: 10px 14px; }
-      .workspace-title h2 { font-size: 0.9rem; }
-      .btn { padding: 8px 14px; font-size: 0.82rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ================= 1. KARŞILAMA SAYFASI ================= -->
+  <!-- EN ÜST GELİŞTİRİCİ BARI -->
+  <div class="developer-topbar">
+    <div class="topbar-content">
+      <span class="dev-name">Muharrem CEYHAN</span>
+      <span class="topbar-divider">|</span>
+      <span class="dev-title">FOUNDER & DEVELOPER</span>
+    </div>
+  </div>
+
+  <!-- 1. LANDING PAGE -->
   <div id="landing-page">
     <nav class="navbar">
       <div class="logo">
-        <div class="logo-icon"><i class="fa-solid fa-graduation-cap"></i></div>
-        <span>AcademiaNotes</span>
+        <div class="logo-icon"><i class="fa-solid fa-square-root-variable"></i></div>
+        <span>CYHN Matematik</span>
       </div>
       <div>
         <button class="btn btn-glass" onclick="openAuthModal('login')">Giriş Yap</button>
@@ -484,243 +225,264 @@
     </nav>
 
     <main class="hero">
-      <div class="badge">
-        <i class="fa-solid fa-sparkles"></i> 2026 Dijital Ders Portalı
+      <div style="margin-bottom: 12px; font-weight: 600; color: var(--accent); font-size: 0.85rem;">
+        <i class="fa-solid fa-graduation-cap"></i> Akademik Not & Duyuru Portalı
       </div>
-      <h1>Üniversite Notlarına Güvenli ve Hızlı Erişim</h1>
-      <p>Analiz, Lineer Cebir, Soyut Matematik ve daha fazlası. Tüm akademik ders materyalleriniz korumalı embed sistemle elinizin altında.</p>
+      <h1>Matematik Bölümü Ders Materyalleri</h1>
+      <p>Ders notları, ders programları ve güncel akademik duyurulara tek bir platformdan güvenle ulaşın.</p>
       <button class="btn btn-primary" style="padding: 14px 28px; font-size: 1rem;" onclick="openAuthModal('login')">
-        <i class="fa-solid fa-arrow-right-to-bracket"></i> Ders Paneline Giriş Yap
+        <i class="fa-solid fa-arrow-right-to-bracket"></i> Portala Giriş Yap
       </button>
     </main>
   </div>
 
-  <!-- ================= 2. MODAL PENCERESİ (FIREBASE KİMLİK DOĞRULAMA) ================= -->
+  <!-- 2. AUTH MODAL -->
   <div id="auth-modal" class="modal-overlay hidden">
     <div class="modal-card">
       <button class="close-modal" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
 
-      <!-- GİRİŞ FORMU -->
       <div id="login-form">
-        <h2 style="margin-bottom: 6px; font-size:1.4rem;">Giriş Yap</h2>
-        <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:16px;">Devam etmek için giriş yapın.</p>
-        
-        <div id="loginAlert" class="alert-box"></div>
-      
+        <h2 style="margin-bottom: 6px;">Giriş Yap</h2>
+        <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:16px;">Devam etmek için hesabınıza erişin.</p>
         <form onsubmit="handleLogin(event)">
           <div class="input-field">
-            <label>E-posta Adresi</label>
-            <input type="email" id="loginEmail" placeholder="ornek@gmail.com" required />
+            <label>E-posta</label>
+            <input type="email" id="loginEmail" required />
           </div>
-        
           <div class="input-field">
             <label>Şifre</label>
-            <input type="password" id="loginPassword" placeholder="••••••••" required minlength="6" />
+            <input type="password" id="loginPassword" required />
           </div>
-        
-          <div style="text-align: right; margin-top: 4px;">
-            <a href="#" onclick="handleResetPassword()" style="font-size: 0.8rem; color: var(--accent); text-decoration: none;">Şifremi Unuttum?</a>
-          </div>
-        
-          <button type="submit" id="loginBtn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Giriş Yap</button>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Giriş Yap</button>
         </form>
-      
-        <p style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--text-secondary);">
-          Hesabınız yok mu? <a href="#" style="color: var(--accent); text-decoration: none;" onclick="switchForm('register')">Kayıt Olun</a>
-        </p>
       </div>
-      
-      <!-- KAYIT FORMU -->
+
       <div id="register-form" class="hidden">
-        <h2 style="margin-bottom: 6px; font-size:1.4rem;">Kayıt Ol</h2>
+        <h2 style="margin-bottom: 6px;">Kayıt Ol</h2>
         <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:16px;">Yeni bir hesap oluşturun.</p>
-        
-        <div id="registerAlert" class="alert-box"></div>
-      
         <form onsubmit="handleRegister(event)">
           <div class="input-field">
-            <label>E-posta Adresi</label>
-            <input type="email" id="regEmail" placeholder="ornek@gmail.com" required />
+            <label>E-posta</label>
+            <input type="email" id="regEmail" required />
           </div>
-        
           <div class="input-field">
             <label>Şifre</label>
-            <input type="password" id="regPassword" placeholder="••••••••" required minlength="6" />
+            <input type="password" id="regPassword" required />
           </div>
-        
-          <button type="submit" id="regBtn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Hesap Oluştur</button>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Kayıt Ol</button>
         </form>
-      
-        <p style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--text-secondary);">
-          Zaten hesabınız var mı? <a href="#" style="color: var(--accent); text-decoration: none;" onclick="switchForm('login')">Giriş Yapın</a>
-        </p>
       </div>
     </div>
   </div>
 
-  <!-- ================= 3. DERS NOTLARI PANELİ (DASHBOARD) ================= -->
+  <!-- 3. DASHBOARD -->
   <div id="dashboard" class="dashboard-container hidden">
-    <!-- Mobil Arka Plan Karartması -->
-    <div id="sidebarOverlay" class="sidebar-overlay hidden" onclick="toggleSidebar()"></div>
-
-    <!-- Sol Sidebar -->
+    
+    <!-- AKORDİON SİDEBAR -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-brand" onclick="showWelcomeView()">
-        <div class="logo-icon"><i class="fa-solid fa-book-open"></i></div>
+        <div class="logo-icon"><i class="fa-solid fa-square-root-variable"></i></div>
         <div>
-          <h3 style="font-size: 0.95rem; font-weight:700;">Ders Notları</h3>
+          <h3 style="font-size: 0.95rem; font-weight:700;">CYHN Portal</h3>
           <p style="font-size: 0.72rem; color: var(--text-secondary);">Matematik Bölümü</p>
         </div>
       </div>
 
-      <div class="search-box">
-        <div class="search-input-wrapper">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="courseSearch" placeholder="Ders notu ara..." onkeyup="filterCourses()" />
-        </div>
-      </div>
-
       <nav class="course-menu">
-        <div class="menu-category">Matematik Dersleri</div>
-        <ul id="courseList" style="list-style: none;">
-          <li class="course-item" onclick="loadCourse(this, 'Analiz 2 Ders Notları', '1ABC123_ORNEK_DRIVE_ID_1')">
-            <div class="course-item-title">
-              <i class="fa-solid fa-file-pdf"></i>
-              <span>Analiz 2</span>
-            </div>
-          </li>
-          <li class="course-item" onclick="loadCourse(this, 'Analiz 1 Ders Notları', '1ABC123_ORNEK_DRIVE_ID_2')">
-            <div class="course-item-title">
-              <i class="fa-solid fa-file-pdf"></i>
-              <span>Analiz 1</span>
-            </div>
-          </li>
-          <li class="course-item" onclick="loadCourse(this, 'Lineer Cebir', '1ABC123_ORNEK_DRIVE_ID_3')">
-            <div class="course-item-title">
-              <i class="fa-solid fa-file-pdf"></i>
-              <span>Lineer Cebir</span>
-            </div>
-          </li>
-          <li class="course-item" onclick="loadCourse(this, 'Soyut Matematik', '1ABC123_ORNEK_DRIVE_ID_4')">
-            <div class="course-item-title">
-              <i class="fa-solid fa-file-pdf"></i>
-              <span>Soyut Matematik</span>
-            </div>
-          </li>
-        </ul>
+        
+        <!-- Güncel Duyurular Kategori -->
+        <div class="acc-header" onclick="toggleAccordion('acc-duyuru', this)">
+          <span><i class="fa-solid fa-bullhorn" style="margin-right: 8px; color: #f59e0b;"></i> Duyurular & Takvim</span>
+          <i class="fa-solid fa-chevron-down chevron"></i>
+        </div>
+        <div class="acc-body" id="acc-duyuru">
+          <div class="course-item" onclick="loadCourse(this, 'Ders Programı & Akademik Takvim', 'DRIVE_ID_DUYURU_1')">
+            <i class="fa-solid fa-calendar-days"></i> Ders Programı / Takvim
+          </div>
+        </div>
+
+        <!-- Analiz Notları -->
+        <div class="acc-header" onclick="toggleAccordion('acc-analiz', this)">
+          <span><i class="fa-solid fa-chart-line" style="margin-right: 8px; color: #3b82f6;"></i> Analiz Notları</span>
+          <i class="fa-solid fa-chevron-down chevron"></i>
+        </div>
+        <div class="acc-body" id="acc-analiz">
+          <div class="course-item" onclick="loadCourse(this, 'Analiz 1 Ders Notları', 'DRIVE_ID_ANALIZ_1')">
+            <i class="fa-solid fa-file-pdf"></i> Analiz 1
+          </div>
+          <div class="course-item" onclick="loadCourse(this, 'Analiz 2 Ders Notları', 'DRIVE_ID_ANALIZ_2')">
+            <i class="fa-solid fa-file-pdf"></i> Analiz 2
+          </div>
+          <div class="course-item" onclick="loadCourse(this, 'Analiz 3 Ders Notları', 'DRIVE_ID_ANALIZ_3')">
+            <i class="fa-solid fa-file-pdf"></i> Analiz 3
+          </div>
+        </div>
+
+        <!-- Lineer Cebir -->
+        <div class="acc-header" onclick="toggleAccordion('acc-lineer', this)">
+          <span><i class="fa-solid fa-calculator" style="margin-right: 8px; color: #10b981;"></i> Lineer Cebir</span>
+          <i class="fa-solid fa-chevron-down chevron"></i>
+        </div>
+        <div class="acc-body" id="acc-lineer">
+          <div class="course-item" onclick="loadCourse(this, 'Lineer Cebir 1', 'DRIVE_ID_LINEER_1')">
+            <i class="fa-solid fa-file-pdf"></i> Lineer Cebir 1
+          </div>
+          <div class="course-item" onclick="loadCourse(this, 'Lineer Cebir 2', 'DRIVE_ID_LINEER_2')">
+            <i class="fa-solid fa-file-pdf"></i> Lineer Cebir 2
+          </div>
+        </div>
+
+        <!-- Tekli Dersler -->
+        <div class="acc-header" onclick="toggleAccordion('acc-diger', this)">
+          <span><i class="fa-solid fa-shapes" style="margin-right: 8px; color: #8b5cf6;"></i> Diğer Dersler</span>
+          <i class="fa-solid fa-chevron-down chevron"></i>
+        </div>
+        <div class="acc-body" id="acc-diger">
+          <div class="course-item" onclick="loadCourse(this, 'Soyut Matematik', 'DRIVE_ID_SOYUT')">
+            <i class="fa-solid fa-atom"></i> Soyut Matematik
+          </div>
+          <div class="course-item" onclick="loadCourse(this, 'Analitik Geometri', 'DRIVE_ID_ANALITIK')">
+            <i class="fa-solid fa-draw-polygon"></i> Analitik Geometri
+          </div>
+          <div class="course-item" onclick="loadCourse(this, 'Algoritma ve Programlama', 'DRIVE_ID_ALGORITMA')">
+            <i class="fa-solid fa-code"></i> Algoritma ve Prog.
+          </div>
+        </div>
+
       </nav>
 
       <div class="sidebar-footer">
-        <div class="user-badge">
-          <i class="fa-solid fa-circle-user"></i>
-          <span id="userDisplayName">@kullanici</span>
-        </div>
         <button class="btn btn-danger" style="width: 100%;" onclick="logout()">
           <i class="fa-solid fa-arrow-right-from-bracket"></i> Çıkış Yap
         </button>
       </div>
     </aside>
 
-    <!-- Sağ Çalışma Alanı -->
+    <!-- SAĞ ÇALIŞMA ALANI -->
     <main class="main-workspace">
       <header class="workspace-header">
-        <div class="workspace-title">
-          <button class="btn btn-glass mobile-menu-btn" onclick="toggleSidebar()">
-            <i class="fa-solid fa-bars"></i>
-          </button>
-          <button class="btn btn-glass hidden" id="backToHomeBtn" onclick="showWelcomeView()">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button class="btn btn-glass" id="backToHomeBtn" onclick="showWelcomeView()">
             <i class="fa-solid fa-house"></i>
           </button>
           <h2 id="activeCourseTitle">Ana Panel</h2>
         </div>
-        <button class="btn btn-glass hidden" id="fullscreenBtn" onclick="toggleFullscreen()">
-          <i class="fa-solid fa-expand"></i> <span>Tam Ekran</span>
-        </button>
       </header>
 
-      <!-- KARŞILAMA / DERS SEÇİM EKRANI (WELCOME VIEW) -->
+      <!-- KARŞILAMA VE İLETİŞİM EKRANI -->
       <div id="welcomeView" class="welcome-container">
         <div class="welcome-banner">
           <h2>Hoş Geldiniz 👋</h2>
-          <p>Çalışmak istediğiniz dersi aşağıdaki kartlardan seçebilir veya sol menüyü kullanabilirsiniz.</p>
+          <p>Sol taraftaki menüden incelemek istediğiniz ders kategorisini veya güncel duyuruları seçebilirsiniz.</p>
         </div>
 
-        <div class="section-title">
-          <i class="fa-solid fa-layer-group" style="color: var(--accent);"></i>
-          Mevcut Ders Materyalleri
-        </div>
-
-        <div class="course-grid">
-          <div class="course-card" onclick="selectCourseFromIndex(0)">
-            <div>
-              <div class="card-icon"><i class="fa-solid fa-calculator"></i></div>
-              <h3>Analiz 2</h3>
-              <p>İntegral, seriler ve çok değişkenli fonksiyonlar ders notları.</p>
+        <!-- İLETİŞİM & DESTEK KANALLARI -->
+        <h3 style="font-size: 1.1rem; margin-bottom: 12px;"><i class="fa-solid fa-headset" style="color: var(--accent);"></i> Destek & İletişim Kanalları</h3>
+        <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 16px;">Eksik not, erişim problemleri veya sorularınız için geliştirici ile doğrudan iletişime geçebilirsiniz:</p>
+        
+        <div class="contact-card-grid">
+          
+          <div class="contact-box">
+            <div class="contact-icon" style="background: rgba(37, 211, 102, 0.15); color: #25d366;">
+              <i class="fa-brands fa-whatsapp"></i>
             </div>
-            <div class="card-action">
-              <span>Notları İncele</span>
-              <i class="fa-solid fa-arrow-right"></i>
+            <div>
+              <h4 style="font-size: 0.95rem;">WhatsApp Destek</h4>
+              <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 8px;">Anlık mesaj ile doğrudan ulaşın.</p>
+              <a href="https://wa.me/905000000000" target="_blank" class="btn btn-whatsapp" style="padding: 6px 12px; font-size: 0.78rem;">
+                <i class="fa-brands fa-whatsapp"></i> Sohbet Başlat
+              </a>
             </div>
           </div>
 
-          <div class="course-card" onclick="selectCourseFromIndex(1)">
-            <div>
-              <div class="card-icon"><i class="fa-solid fa-chart-line"></i></div>
-              <h3>Analiz 1</h3>
-              <p>LİMİT, süreklilik ve türev kavramları ders içerikleri.</p>
+          <div class="contact-box">
+            <div class="contact-icon" style="background: rgba(99, 102, 241, 0.15); color: var(--accent);">
+              <i class="fa-solid fa-envelope"></i>
             </div>
-            <div class="card-action">
-              <span>Notları İncele</span>
-              <i class="fa-solid fa-arrow-right"></i>
+            <div>
+              <h4 style="font-size: 0.95rem;">E-Posta İletişim</h4>
+              <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 8px;">Görüş ve taleplerinizi iletin.</p>
+              <a href="mailto:ornek@domain.com" class="btn btn-glass" style="padding: 6px 12px; font-size: 0.78rem;">
+                <i class="fa-solid fa-envelope"></i> E-Posta Gönder
+              </a>
             </div>
           </div>
 
-          <div class="course-card" onclick="selectCourseFromIndex(2)">
-            <div>
-              <div class="card-icon"><i class="fa-solid fa-grip"></i></div>
-              <h3>Lineer Cebir</h3>
-              <p>Matrisler, determinat, vektör uzayları ve lineer dönüşümler.</p>
-            </div>
-            <div class="card-action">
-              <span>Notları İncele</span>
-              <i class="fa-solid fa-arrow-right"></i>
-            </div>
-          </div>
-
-          <div class="course-card" onclick="selectCourseFromIndex(3)">
-            <div>
-              <div class="card-icon"><i class="fa-solid fa-infinity"></i></div>
-              <h3>Soyut Matematik</h3>
-              <p>Kümeler, bağıntılar, mantık ve grup teorisi temelleri.</p>
-            </div>
-            <div class="card-action">
-              <span>Notları İncele</span>
-              <i class="fa-solid fa-arrow-right"></i>
-            </div>
-          </div>
         </div>
       </div>
 
-      <!-- PDF GÖRÜNTÜLEYİCİ EKRANI -->
+      <!-- PDF GÖRÜNTÜLEYİCİ -->
       <div id="pdfContainer" class="pdf-container hidden">
-        <div id="pdfLoader" class="pdf-loader">
-          <div class="spinner"></div>
-          <p style="color: var(--text-secondary); font-size: 0.85rem;">Ders notu yükleniyor...</p>
-        </div>
-
-        <div class="pdf-iframe-wrapper" id="iframeWrapper">
-          <iframe 
-            id="pdfFrame" 
-            src="" 
-            onload="hideLoader()"
-            allow="autoplay">
-          </iframe>
+        <div class="pdf-iframe-wrapper">
+          <iframe id="pdfFrame" src=""></iframe>
         </div>
       </div>
     </main>
+
   </div>
 
-  <!-- FIREBASE ENTEGRASYONU & SAYFA MANTIĞI -->
-  <script type="module" src="./script.js?v=105"></script>
+  <script>
+    // Akordiyon Menü Geçişleri
+    function toggleAccordion(id, element) {
+      const body = document.getElementById(id);
+      body.classList.toggle('open');
+      element.classList.toggle('active');
+    }
+
+    // Modal İşlemleri
+    function openAuthModal(type) {
+      document.getElementById('auth-modal').classList.remove('hidden');
+      if (type === 'login') {
+        document.getElementById('login-form').classList.remove('hidden');
+        document.getElementById('register-form').classList.add('hidden');
+      } else {
+        document.getElementById('login-form').classList.add('hidden');
+        document.getElementById('register-form').classList.remove('hidden');
+      }
+    }
+
+    function closeAuthModal() {
+      document.getElementById('auth-modal').classList.add('hidden');
+    }
+
+    // Geçici Giriş / Panel Görünümü
+    function handleLogin(e) {
+      e.preventDefault();
+      closeAuthModal();
+      document.getElementById('landing-page').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+    }
+
+    function handleRegister(e) {
+      e.preventDefault();
+      handleLogin(e);
+    }
+
+    function logout() {
+      document.getElementById('dashboard').classList.add('hidden');
+      document.getElementById('landing-page').classList.remove('hidden');
+    }
+
+    // Ders Yükleme
+    function loadCourse(element, title, driveId) {
+      document.querySelectorAll('.course-item').forEach(item => item.classList.remove('active'));
+      element.classList.add('active');
+      
+      document.getElementById('activeCourseTitle').innerText = title;
+      document.getElementById('welcomeView').classList.add('hidden');
+      document.getElementById('pdfContainer').classList.remove('hidden');
+
+      // Google Drive Embed Yapısı
+      const embedUrl = `https://drive.google.com/file/d/${driveId}/preview`;
+      document.getElementById('pdfFrame').src = embedUrl;
+    }
+
+    function showWelcomeView() {
+      document.getElementById('activeCourseTitle').innerText = 'Ana Panel';
+      document.getElementById('pdfContainer').classList.add('hidden');
+      document.getElementById('welcomeView').classList.remove('hidden');
+      document.querySelectorAll('.course-item').forEach(item => item.classList.remove('active'));
+    }
+  </script>
 </body>
 </html>
