@@ -246,7 +246,11 @@
       height: 100vh;
       width: 100vw;
       overflow: hidden;
-      position: relative;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 200;
+      background: var(--bg-main);
     }
 
     /* Sidebar */
@@ -501,23 +505,23 @@
         <h2 style="margin-bottom: 6px; font-size:1.4rem;">Giriş Yap</h2>
         <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:16px;">Devam etmek için giriş yapın.</p>
         
-        <div id="loginAlert" class="alert-box" style="display:none;"></div>
+        <div id="loginAlert" class="alert-box"></div>
       
         <form onsubmit="handleLogin(event)">
           <div class="input-field">
             <label>E-posta Adresi</label>
             <input type="email" id="loginEmail" placeholder="ornek@gmail.com" required />
           </div>
-      
+        
           <div class="input-field">
             <label>Şifre</label>
             <input type="password" id="loginPassword" placeholder="••••••••" required minlength="6" />
           </div>
-      
+        
           <div style="text-align: right; margin-top: 4px;">
             <a href="#" onclick="handleResetPassword()" style="font-size: 0.8rem; color: var(--accent); text-decoration: none;">Şifremi Unuttum?</a>
           </div>
-      
+        
           <button type="submit" id="loginBtn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Giriş Yap</button>
         </form>
       
@@ -531,19 +535,19 @@
         <h2 style="margin-bottom: 6px; font-size:1.4rem;">Kayıt Ol</h2>
         <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:16px;">Yeni bir hesap oluşturun.</p>
         
-        <div id="registerAlert" class="alert-box" style="display:none;"></div>
+        <div id="registerAlert" class="alert-box"></div>
       
         <form onsubmit="handleRegister(event)">
           <div class="input-field">
             <label>E-posta Adresi</label>
             <input type="email" id="regEmail" placeholder="ornek@gmail.com" required />
           </div>
-      
+        
           <div class="input-field">
             <label>Şifre</label>
             <input type="password" id="regPassword" placeholder="••••••••" required minlength="6" />
           </div>
-      
+        
           <button type="submit" id="regBtn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Hesap Oluştur</button>
         </form>
       
@@ -551,7 +555,9 @@
           Zaten hesabınız var mı? <a href="#" style="color: var(--accent); text-decoration: none;" onclick="switchForm('login')">Giriş Yapın</a>
         </p>
       </div>
-      
+    </div>
+  </div>
+
   <!-- ================= 3. DERS NOTLARI PANELİ (DASHBOARD) ================= -->
   <div id="dashboard" class="dashboard-container hidden">
     <!-- Mobil Arka Plan Karartması -->
@@ -577,7 +583,6 @@
       <nav class="course-menu">
         <div class="menu-category">Matematik Dersleri</div>
         <ul id="courseList" style="list-style: none;">
-          <!-- GOOGLE DRIVE ID'LERİNİZİ BURAYA YAZIN -->
           <li class="course-item" onclick="loadCourse(this, 'Analiz 2 Ders Notları', '1ABC123_ORNEK_DRIVE_ID_1')">
             <div class="course-item-title">
               <i class="fa-solid fa-file-pdf"></i>
@@ -716,6 +721,6 @@
   </div>
 
   <!-- FIREBASE ENTEGRASYONU & SAYFA MANTIĞI -->
- <script type="module" src="./script.js?v=99"></script>
+  <script type="module" src="./script.js?v=105"></script>
 </body>
 </html>
