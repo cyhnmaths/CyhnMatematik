@@ -94,50 +94,55 @@ function clearAlerts() {
   if (registerAlert) registerAlert.style.display = 'none';
 }
 
-// 4. Oturum Takibi (Body tetiklemesi ile mavi ekran kilitlenmesini önleyen yapı)
+// 4. Oturum Takibi (Kesin Görünürlük Yapılandırması)
 onAuthStateChanged(auth, (user) => {
-  const landing = document.getElementById('landing-page');
-  const dashboard = document.getElementById('dashboard') || document.getElementById('app-dashboard');
+  // Tüm olası panel ve landing ID'lerini yakala
+  const landing = document.getElementById('landing-page') || document.querySelector('.hero-section');
+  const dashboard = document.getElementById('dashboard') || document.getElementById('app-dashboard') || document.querySelector('.dashboard-container');
   const authModal = document.getElementById('auth-modal');
 
   if (user) {
-    // Body sınıfı ekleyerek CSS çakışmasını engelle
     document.body.classList.add('user-logged-in');
 
-    // 1. Modalı ve Karşılama Sayfasını Kapat
+    // 1. Karşılama ekranını ve modalı tamamen gizle
     if (authModal) {
       authModal.classList.add('hidden');
-      authModal.style.display = 'none';
+      authModal.style.setProperty('display', 'none', 'important');
     }
     if (landing) {
       landing.classList.add('hidden');
-      landing.style.display = 'none';
+      landing.style.setProperty('display', 'none', 'important');
     }
     
-    // 2. Paneli (Dashboard) Ekranı Kaplayacak Şekilde Görünür Yap
+    // 2. Dashboard'u kesin olarak öne çıkar ve göster
     if (dashboard) {
       dashboard.classList.remove('hidden');
-      dashboard.style.display = 'flex';
+      dashboard.style.setProperty('display', 'flex', 'important');
+      dashboard.style.setProperty('z-index', '9999', 'important');
+      dashboard.style.setProperty('position', 'fixed', 'important');
+      dashboard.style.setProperty('top', '0', 'important');
+      dashboard.style.setProperty('left', '0', 'important');
+      dashboard.style.setProperty('width', '100vw', 'important');
+      dashboard.style.setProperty('height', '100vh', 'important');
       dashboard.style.opacity = '1';
       dashboard.style.visibility = 'visible';
     }
 
-    // 3. Kullanıcı adını güncelle
+    // 3. Kullanıcı adını bas
     const userDisplayName = document.getElementById('userDisplayName');
     if (userDisplayName && user.email) {
       userDisplayName.innerText = `@${user.email.split('@')[0]}`;
     }
   } else {
-    // Çıkış yapılmışsa body sınıfını kaldır ve ana sayfayı aç
     document.body.classList.remove('user-logged-in');
 
     if (dashboard) {
       dashboard.classList.add('hidden');
-      dashboard.style.display = 'none';
+      dashboard.style.setProperty('display', 'none', 'important');
     }
     if (landing) {
       landing.classList.remove('hidden');
-      landing.style.display = 'block';
+      landing.style.setProperty('display', 'block', 'important');
     }
   }
 });
