@@ -37,6 +37,7 @@
       --danger: #ef4444;
       --whatsapp: #25d366;
     }
+    
     /* Bakım Modu Tam Ekran Katmanı */
     #maintenance-overlay {
       position: fixed;
@@ -103,6 +104,7 @@
       50% { transform: scale(1.1); opacity: 1; }
       100% { transform: scale(1); opacity: 0.8; }
     }
+
     * { 
       margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; 
       /* Metin seçimini tüm sitede engelleme */
@@ -316,6 +318,18 @@
   </style>
 </head>
 <body oncontextmenu="return false;">
+
+  <!-- BAKIM MODU EKRANI KATMANI -->
+  <div id="maintenance-overlay" class="hidden">
+    <div class="maintenance-card">
+      <div class="maintenance-icon">
+        <i class="fa-solid fa-gears"></i>
+      </div>
+      <h1>Sistem Bakımda</h1>
+      <p>CYHN Matematik Portalı sizlere daha iyi hizmet verebilmek amacıyla kısa süreliğine bakıma alınmıştır. Lütfen daha sonra tekrar ziyaret ediniz.</p>
+      <span class="badge"><i class="fa-solid fa-clock" style="margin-right: 6px;"></i> Çalışmalar Devam Ediyor</span>
+    </div>
+  </div>
 
   <!-- DEVELOPER TOPBAR -->
   <div class="developer-topbar">
@@ -556,6 +570,21 @@
     </main>
   </div>
 
+  <!-- BAKIM MODU DÜZENLEME DEĞİŞKENİ -->
+  <script>
+    // Bakım modunu açmak için: true
+    // Bakım modunu kapatıp siteyi açmak için: false
+    const IS_MAINTENANCE_MODE = true;
+
+    if (IS_MAINTENANCE_MODE) {
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById('maintenance-overlay').classList.remove('hidden');
+        document.getElementById('landing-page').classList.add('hidden');
+        document.getElementById('dashboard').classList.add('hidden');
+      });
+    }
+  </script>
+
   <!-- FIREBASE SDK & AUTH INTEGRATION -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -574,6 +603,8 @@
     const auth = getAuth(app);
 
     onAuthStateChanged(auth, (user) => {
+      if (typeof IS_MAINTENANCE_MODE !== 'undefined' && IS_MAINTENANCE_MODE) return;
+
       if (user) {
         document.getElementById('landing-page').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
@@ -585,6 +616,8 @@
 
     window.handleLogin = async function(e) {
       e.preventDefault();
+      if (typeof IS_MAINTENANCE_MODE !== 'undefined' && IS_MAINTENANCE_MODE) return;
+      
       const email = document.getElementById('loginEmail').value;
       const pass = document.getElementById('loginPassword').value;
       const errorDiv = document.getElementById('loginError');
@@ -605,6 +638,8 @@
     // KAYIT OLUNDUKTAN SONRA OTOMATİK OTURUMU KAPATIP GİRİŞ EKRANINA YÖNLENDİRİR
     window.handleRegister = async function(e) {
       e.preventDefault();
+      if (typeof IS_MAINTENANCE_MODE !== 'undefined' && IS_MAINTENANCE_MODE) return;
+
       const email = document.getElementById('regEmail').value;
       const pass = document.getElementById('regPassword').value;
       const errorDiv = document.getElementById('regError');
@@ -649,6 +684,8 @@
     }
 
     function openAuthModal(type) {
+      if (typeof IS_MAINTENANCE_MODE !== 'undefined' && IS_MAINTENANCE_MODE) return;
+
       document.getElementById('auth-modal').classList.remove('hidden');
       document.getElementById('loginError').style.display = "none";
       document.getElementById('loginSuccess').style.display = "none";
