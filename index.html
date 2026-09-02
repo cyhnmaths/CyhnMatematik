@@ -107,7 +107,6 @@
 
     * { 
       margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; 
-      /* Metin seçimini tüm sitede engelleme */
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
@@ -290,7 +289,6 @@
     .pdf-iframe-wrapper { flex: 1; width: 100%; height: 100%; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-glass); background: #1e293b; position: relative; }
     iframe { width: 100%; height: 100%; border: none; }
 
-    /* YENİ PENCEREDE AÇ BUTONUNU TIKLANMAYA KAPATAN KATMAN */
     .pdf-overlay-blocker {
       position: absolute;
       top: 0;
@@ -343,7 +341,6 @@
   <!-- LANDING PAGE -->
   <div id="landing-page">
     <nav class="navbar">
-      <!-- SOL ÜST LOGO & BAŞLIK -->
       <div class="logo">
         <div class="logo-icon"><i class="fa-solid fa-infinity"></i></div>
         <span>CYHN Matematik</span>
@@ -371,13 +368,13 @@
     <div class="modal-card">
       <button class="close-modal" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
 
-      <!-- GİRİŞ FORM -->
-      <div id="login-form">
+      <!-- GİRİŞ FORMU KUTUSU -->
+      <div id="login-box">
         <h2 style="margin-bottom: 6px;">Giriş Yap</h2>
         <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:16px;">Devam etmek için hesabınıza erişin.</p>
         <div id="loginSuccess" class="success-msg"></div>
         <div id="loginError" class="error-msg">Giriş başarısız. E-posta veya şifre hatalı.</div>
-        <form onsubmit="handleLogin(event)">
+        <form id="loginForm">
           <div class="input-field">
             <label>E-posta</label>
             <input type="email" id="loginEmail" required />
@@ -390,12 +387,12 @@
         </form>
       </div>
 
-      <!-- KAYIT FORM -->
-      <div id="register-form" class="hidden">
+      <!-- KAYIT FORMU KUTUSU -->
+      <div id="register-box" class="hidden">
         <h2 style="margin-bottom: 6px;">Kayıt Ol</h2>
         <p style="color: var(--text-secondary); font-size:0.85rem; margin-bottom:16px;">Yeni bir hesap oluşturun.</p>
         <div id="regError" class="error-msg">Kayıt işlemi başarısız oldu.</div>
-        <form onsubmit="handleRegister(event)">
+        <form id="registerForm">
           <div class="input-field">
             <label>E-posta</label>
             <input type="email" id="regEmail" required />
@@ -434,11 +431,9 @@
           <i class="fa-solid fa-chevron-down chevron"></i>
         </div>
         <div class="acc-body" id="acc-duyuru">
-          <!-- 1) NEVÜ MAFET Resmi Web Sitesi -->
           <div class="course-item" onclick="window.open('https://mafet.nevsehir.edu.tr/', '_blank')">
             <i class="fa-solid fa-globe" style="color: #3b82f6;"></i> NEVÜ MAFET Resmi Web Sitesi
           </div>
-          <!-- 2) Akademik Takvim -->
           <div class="course-item" onclick="window.open('https://dosyalar.nevsehir.edu.tr/5a4e52432723f16288be71c643cbc605/a.takvim.pdf', '_blank')">
             <i class="fa-solid fa-calendar-days" style="color: #10b981;"></i> Akademik Takvim
           </div>
@@ -567,7 +562,6 @@
 
       <div id="pdfContainer" class="pdf-container hidden">
         <div class="pdf-iframe-wrapper">
-          <!-- Sağ üst köşedeki harici pencere butonunu engelleyen şeffaf katman -->
           <div class="pdf-overlay-blocker"></div>
           <iframe id="pdfFrame" src=""></iframe>
         </div>
@@ -575,18 +569,87 @@
     </main>
   </div>
 
-  <!-- BAKIM MODU DÜZENLEME DEĞİŞKENİ -->
+  <!-- ARAYÜZ YARDIMCI FONKSİYONLARI -->
   <script>
-    // Bakım modunu açmak için: true
-    // Bakım modunu kapatıp siteyi açmak için: false
     const IS_MAINTENANCE_MODE = false;
 
     if (IS_MAINTENANCE_MODE) {
       document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById('maintenance-overlay').classList.remove('hidden');
-        document.getElementById('landing-page').classList.add('hidden');
-        document.getElementById('dashboard').classList.add('hidden');
+        document.getElementById('maintenance-overlay')?.classList.remove('hidden');
+        document.getElementById('landing-page')?.classList.add('hidden');
+        document.getElementById('dashboard')?.classList.add('hidden');
       });
+    }
+
+    function openAuthModal(type) {
+      const modal = document.getElementById('auth-modal');
+      const loginBox = document.getElementById('login-box');
+      const registerBox = document.getElementById('register-box');
+      
+      if (!modal) return;
+      modal.classList.remove('hidden');
+
+      if (type === 'register') {
+        loginBox?.classList.add('hidden');
+        registerBox?.classList.remove('hidden');
+      } else {
+        registerBox?.classList.add('hidden');
+        loginBox?.classList.remove('hidden');
+      }
+    }
+
+    function closeAuthModal() {
+      document.getElementById('auth-modal')?.classList.add('hidden');
+    }
+
+    function toggleAccordion(id, headerEl) {
+      const body = document.getElementById(id);
+      if (body) {
+        body.classList.toggle('open');
+        headerEl?.classList.toggle('active');
+      }
+    }
+
+    function loadCourse(itemEl, title, driveId) {
+      document.querySelectorAll('.course-item').forEach(el => el.classList.remove('active'));
+      itemEl?.classList.add('active');
+
+      const titleEl = document.getElementById('activeCourseTitle');
+      if (titleEl) titleEl.innerText = title;
+
+      const welcomeView = document.getElementById('welcomeView');
+      const pdfContainer = document.getElementById('pdfContainer');
+      const pdfFrame = document.getElementById('pdfFrame');
+
+      if (welcomeView) welcomeView.classList.add('hidden');
+      if (pdfContainer) pdfContainer.classList.remove('hidden');
+      
+      if (pdfFrame) {
+        pdfFrame.src = `https://drive.google.com/file/d/${driveId}/preview`;
+      }
+
+      if (window.innerWidth <= 768) {
+        toggleSidebar();
+      }
+    }
+
+    function showWelcomeView() {
+      const welcomeView = document.getElementById('welcomeView');
+      const pdfContainer = document.getElementById('pdfContainer');
+      const titleEl = document.getElementById('activeCourseTitle');
+
+      if (welcomeView) welcomeView.classList.remove('hidden');
+      if (pdfContainer) pdfContainer.classList.add('hidden');
+      if (titleEl) titleEl.innerText = 'Ana Panel';
+      
+      document.querySelectorAll('.course-item').forEach(el => el.classList.remove('active'));
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar?.classList.toggle('open');
+      overlay?.classList.toggle('active');
     }
   </script>
 
@@ -620,9 +683,9 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // OTURUM VE YÖNETİCİ ONAYI KONTROLÜ
+    // OTURUM KONTROLÜ
     onAuthStateChanged(auth, async (user) => {
-      if (typeof window.IS_MAINTENANCE_MODE !== 'undefined' && window.IS_MAINTENANCE_MODE) return;
+      if (window.IS_MAINTENANCE_MODE) return;
 
       if (user) {
         try {
@@ -653,7 +716,7 @@
       }
     });
 
-    // GİRİŞ FONKSİYONU
+    // GİRİŞ İŞLEMİ
     async function handleLogin(e) {
       if (e) e.preventDefault();
       
@@ -678,7 +741,7 @@
       }
     }
 
-    // KAYIT FONKSİYONU
+    // KAYIT İŞLEMİ
     async function handleRegister(e) {
       if (e) e.preventDefault();
 
@@ -719,17 +782,15 @@
       }
     }
 
-    // GLOBAL TANIMLAMALAR (Pencereye Bağlama)
-    window.handleLogin = handleLogin;
-    window.handleRegister = handleRegister;
+    // GLOBAL TANIMLAR
     window.logout = function() {
       signOut(auth);
     };
 
-    // FORM OLAY DİNLEYİCİLERİNİ BAĞLAMA (Tıklamama sorununu çözer)
+    // FORM DİNLENMESİ
     document.addEventListener('DOMContentLoaded', () => {
-      const loginForm = document.getElementById('login-form');
-      const registerForm = document.getElementById('register-form');
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
 
       if (loginForm) loginForm.addEventListener('submit', handleLogin);
       if (registerForm) registerForm.addEventListener('submit', handleRegister);
