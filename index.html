@@ -629,8 +629,8 @@
           const userDoc = await getDoc(doc(db, "users", user.uid));
 
           if (userDoc.exists() && userDoc.data().approved === true) {
-            document.getElementById('landing-page').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
+            document.getElementById('landing-page')?.classList.add('hidden');
+            document.getElementById('dashboard')?.classList.remove('hidden');
           } else {
             await signOut(auth);
             if (typeof window.openAuthModal === 'function') window.openAuthModal('login');
@@ -640,34 +640,35 @@
               errorDiv.innerText = "Hesabınız henüz yönetici onayından geçmemiştir. Onay verildikten sonra giriş yapabilirsiniz.";
               errorDiv.style.display = "block";
             }
-            document.getElementById('dashboard').classList.add('hidden');
-            document.getElementById('landing-page').classList.remove('hidden');
+            document.getElementById('dashboard')?.classList.add('hidden');
+            document.getElementById('landing-page')?.classList.remove('hidden');
           }
         } catch (error) {
           console.error("Onay kontrolü hatası:", error);
           await signOut(auth);
         }
       } else {
-        document.getElementById('dashboard').classList.add('hidden');
-        document.getElementById('landing-page').classList.remove('hidden');
+        document.getElementById('dashboard')?.classList.add('hidden');
+        document.getElementById('landing-page')?.classList.remove('hidden');
       }
     });
 
-    // KULLANICI GİRİŞİ
-    window.handleLogin = async function(e) {
+    // GİRİŞ FONKSİYONU
+    async function handleLogin(e) {
       if (e) e.preventDefault();
-      if (typeof window.IS_MAINTENANCE_MODE !== 'undefined' && window.IS_MAINTENANCE_MODE) return;
       
-      const email = document.getElementById('loginEmail').value;
-      const pass = document.getElementById('loginPassword').value;
+      const emailInput = document.getElementById('loginEmail');
+      const passInput = document.getElementById('loginPassword');
       const errorDiv = document.getElementById('loginError');
       const successDiv = document.getElementById('loginSuccess');
+      
+      if (!emailInput || !passInput) return;
       
       if (errorDiv) errorDiv.style.display = "none";
       if (successDiv) successDiv.style.display = "none";
 
       try {
-        await signInWithEmailAndPassword(auth, email, pass);
+        await signInWithEmailAndPassword(auth, emailInput.value, passInput.value);
         if (typeof window.closeAuthModal === 'function') window.closeAuthModal();
       } catch (err) {
         if (errorDiv) {
@@ -675,32 +676,33 @@
           errorDiv.style.display = "block";
         }
       }
-    };
+    }
 
-    // YENİ KAYIT (Yönetici Onaylı)
-    window.handleRegister = async function(e) {
+    // KAYIT FONKSİYONU
+    async function handleRegister(e) {
       if (e) e.preventDefault();
-      if (typeof window.IS_MAINTENANCE_MODE !== 'undefined' && window.IS_MAINTENANCE_MODE) return;
 
-      const email = document.getElementById('regEmail').value;
-      const pass = document.getElementById('regPassword').value;
+      const emailInput = document.getElementById('regEmail');
+      const passInput = document.getElementById('regPassword');
       const errorDiv = document.getElementById('regError');
+
+      if (!emailInput || !passInput) return;
 
       if (errorDiv) errorDiv.style.display = "none";
       try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+        const userCredential = await createUserWithEmailAndPassword(auth, emailInput.value, passInput.value);
         const user = userCredential.user;
 
         await setDoc(doc(db, "users", user.uid), {
-          email: email,
+          email: emailInput.value,
           approved: false,
           createdAt: new Date().toISOString()
         });
 
         await signOut(auth);
         
-        document.getElementById('regEmail').value = "";
-        document.getElementById('regPassword').value = "";
+        emailInput.value = "";
+        passInput.value = "";
         
         if (typeof window.openAuthModal === 'function') window.openAuthModal('login');
         
@@ -715,12 +717,23 @@
           errorDiv.style.display = "block";
         }
       }
-    };
+    }
 
-    // ÇIKIŞ YAP
+    // GLOBAL TANIMLAMALAR (Pencereye Bağlama)
+    window.handleLogin = handleLogin;
+    window.handleRegister = handleRegister;
     window.logout = function() {
       signOut(auth);
     };
+
+    // FORM OLAY DİNLEYİCİLERİNİ BAĞLAMA (Tıklamama sorununu çözer)
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginForm = document.getElementById('login-form');
+      const registerForm = document.getElementById('register-form');
+
+      if (loginForm) loginForm.addEventListener('submit', handleLogin);
+      if (registerForm) registerForm.addEventListener('submit', handleRegister);
+    });
   </script>
 </body>
 </html>
