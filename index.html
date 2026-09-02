@@ -385,6 +385,12 @@
           </div>
           <button type="submit" id="loginBtn" class="btn btn-primary" style="width: 100%;">Giriş Yap</button>
         </form>
+        
+        <!-- Giriş Kutusu Altındaki Geçiş Bağlantısı -->
+        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 18px; text-align: center;">
+          Hesabınız yok mu? 
+          <a href="#" onclick="openAuthModal('register'); return false;" style="color: var(--accent, #a855f7); font-weight: 600; text-decoration: none;">Kayıt Ol</a>
+        </p>
       </div>
 
       <!-- KAYIT FORMU KUTUSU -->
@@ -403,6 +409,12 @@
           </div>
           <button type="submit" id="regBtn" class="btn btn-primary" style="width: 100%;">Kayıt Ol</button>
         </form>
+        
+        <!-- Kayıt Kutusu Altındaki Geçiş Bağlantısı -->
+        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 18px; text-align: center;">
+          Zaten hesabınız var mı? 
+          <a href="#" onclick="openAuthModal('login'); return false;" style="color: var(--accent, #a855f7); font-weight: 600; text-decoration: none;">Giriş Yap</a>
+        </p>
       </div>
     </div>
   </div>
