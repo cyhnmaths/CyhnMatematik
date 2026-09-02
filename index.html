@@ -653,7 +653,7 @@
     }
   </script>
 
-  <!-- FIREBASE SDK, AUTH & FIRESTORE INTEGRATION -->
+<!-- FIREBASE SDK, AUTH & FIRESTORE INTEGRATION -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
@@ -700,6 +700,7 @@
           if (userDoc.exists() && userDoc.data().approved === true) {
             document.getElementById('landing-page')?.classList.add('hidden');
             document.getElementById('dashboard')?.classList.remove('hidden');
+            if (typeof window.closeAuthModal === 'function') window.closeAuthModal();
           } else {
             await signOut(auth);
             if (typeof window.openAuthModal === 'function') window.openAuthModal('login');
@@ -793,66 +794,18 @@
           errorDiv.style.display = "block";
         }
       } finally {
-        // İşlem bittiğinde bayrağı tekrar sıfırla
         isRegistering = false;
-        }
       }
     }
 
-    // KAYIT İŞLEMİ
-    async function handleRegister(e) {
-      if (e) e.preventDefault();
-
-      const emailInput = document.getElementById('regEmail');
-      const passInput = document.getElementById('regPassword');
-      const errorDiv = document.getElementById('regError');
-
-      if (!emailInput || !passInput) return;
-
-      if (errorDiv) errorDiv.style.display = "none";
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, emailInput.value, passInput.value);
-        const user = userCredential.user;
-
-        await setDoc(doc(db, "users", user.uid), {
-          email: emailInput.value,
-          approved: false,
-          createdAt: new Date().toISOString()
-        });
-
-        await signOut(auth);
-        
-        emailInput.value = "";
-        passInput.value = "";
-        
-        if (typeof window.openAuthModal === 'function') window.openAuthModal('login');
-        
-        const successDiv = document.getElementById('loginSuccess');
-        if (successDiv) {
-          successDiv.innerText = "Kayıt talebiniz alındı! Yönetici onayından sonra giriş yapabilirsiniz.";
-          successDiv.style.display = "block";
-        }
-      } catch (err) {
-        if (errorDiv) {
-          errorDiv.innerText = "Kayıt oluşturulamadı: " + err.message;
-          errorDiv.style.display = "block";
-        }
-      }
-    }
+    // FORM DİNLENMESİ
+    document.getElementById('loginForm')?.addEventListener('submit', handleLogin);
+    document.getElementById('registerForm')?.addEventListener('submit', handleRegister);
 
     // GLOBAL TANIMLAR
     window.logout = function() {
-      signOut(auth);
+      signOut(auth).then(() => window.location.reload());
     };
-
-    // FORM DİNLENMESİ
-    document.addEventListener('DOMContentLoaded', () => {
-      const loginForm = document.getElementById('loginForm');
-      const registerForm = document.getElementById('registerForm');
-
-      if (loginForm) loginForm.addEventListener('submit', handleLogin);
-      if (registerForm) registerForm.addEventListener('submit', handleRegister);
-    });
   </script>
 </body>
 </html>
