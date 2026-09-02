@@ -622,24 +622,24 @@
 
     // OTURUM VE YÖNETİCİ ONAYI KONTROLÜ
     onAuthStateChanged(auth, async (user) => {
-      if (typeof IS_MAINTENANCE_MODE !== 'undefined' && IS_MAINTENANCE_MODE) return;
+      if (typeof window.IS_MAINTENANCE_MODE !== 'undefined' && window.IS_MAINTENANCE_MODE) return;
 
       if (user) {
         try {
-          // Kullanıcının veritabanındaki onay durumunu sorgula
           const userDoc = await getDoc(doc(db, "users", user.uid));
 
           if (userDoc.exists() && userDoc.data().approved === true) {
-            // ONAYLI KULLANICI: İçeriye al
             document.getElementById('landing-page').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
           } else {
-            // ONAYSIZ KULLANICI: Oturumu kapat ve uyarı ver
             await signOut(auth);
-            openAuthModal('login');
+            if (typeof window.openAuthModal === 'function') window.openAuthModal('login');
+            
             const errorDiv = document.getElementById('loginError');
-            errorDiv.innerText = "Hesabınız henüz yönetici onayından geçmemiştir. Onay verildikten sonra giriş yapabilirsiniz.";
-            errorDiv.style.display = "block";
+            if (errorDiv) {
+              errorDiv.innerText = "Hesabınız henüz yönetici onayından geçmemiştir. Onay verildikten sonra giriş yapabilirsiniz.";
+              errorDiv.style.display = "block";
+            }
             document.getElementById('dashboard').classList.add('hidden');
             document.getElementById('landing-page').classList.remove('hidden');
           }
@@ -655,62 +655,65 @@
 
     // KULLANICI GİRİŞİ
     window.handleLogin = async function(e) {
-      e.preventDefault();
-      if (typeof IS_MAINTENANCE_MODE !== 'undefined' && IS_MAINTENANCE_MODE) return;
+      if (e) e.preventDefault();
+      if (typeof window.IS_MAINTENANCE_MODE !== 'undefined' && window.IS_MAINTENANCE_MODE) return;
       
       const email = document.getElementById('loginEmail').value;
       const pass = document.getElementById('loginPassword').value;
       const errorDiv = document.getElementById('loginError');
       const successDiv = document.getElementById('loginSuccess');
       
-      errorDiv.style.display = "none";
-      successDiv.style.display = "none";
+      if (errorDiv) errorDiv.style.display = "none";
+      if (successDiv) successDiv.style.display = "none";
 
       try {
         await signInWithEmailAndPassword(auth, email, pass);
-        // Giriş başarılı olursa onay kontrolü onAuthStateChanged içinde otomatik çalışır.
+        if (typeof window.closeAuthModal === 'function') window.closeAuthModal();
       } catch (err) {
-        errorDiv.innerText = "Giriş başarısız: E-posta veya şifre hatalı.";
-        errorDiv.style.display = "block";
+        if (errorDiv) {
+          errorDiv.innerText = "Giriş başarısız: E-posta veya şifre hatalı.";
+          errorDiv.style.display = "block";
+        }
       }
     };
 
     // YENİ KAYIT (Yönetici Onaylı)
     window.handleRegister = async function(e) {
-      e.preventDefault();
-      if (typeof IS_MAINTENANCE_MODE !== 'undefined' && IS_MAINTENANCE_MODE) return;
+      if (e) e.preventDefault();
+      if (typeof window.IS_MAINTENANCE_MODE !== 'undefined' && window.IS_MAINTENANCE_MODE) return;
 
       const email = document.getElementById('regEmail').value;
       const pass = document.getElementById('regPassword').value;
       const errorDiv = document.getElementById('regError');
 
-      errorDiv.style.display = "none";
+      if (errorDiv) errorDiv.style.display = "none";
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
         const user = userCredential.user;
 
-        // Kullanıcıyı veritabanına "approved: false" olarak kaydediyoruz
         await setDoc(doc(db, "users", user.uid), {
           email: email,
           approved: false,
           createdAt: new Date().toISOString()
         });
 
-        // Otomatik girişi engellemek için oturumu kapatıyoruz
         await signOut(auth);
         
-        // Form alanlarını temizle
         document.getElementById('regEmail').value = "";
         document.getElementById('regPassword').value = "";
         
-        // Giriş modala geç ve bilgi mesajı göster
-        openAuthModal('login');
+        if (typeof window.openAuthModal === 'function') window.openAuthModal('login');
+        
         const successDiv = document.getElementById('loginSuccess');
-        successDiv.innerText = "Kayıt talebiniz alındı! Yönetici onayından sonra giriş yapabilirsiniz.";
-        successDiv.style.display = "block";
+        if (successDiv) {
+          successDiv.innerText = "Kayıt talebiniz alındı! Yönetici onayından sonra giriş yapabilirsiniz.";
+          successDiv.style.display = "block";
+        }
       } catch (err) {
-        errorDiv.innerText = "Kayıt oluşturulamadı: " + err.message;
-        errorDiv.style.display = "block";
+        if (errorDiv) {
+          errorDiv.innerText = "Kayıt oluşturulamadı: " + err.message;
+          errorDiv.style.display = "block";
+        }
       }
     };
 
