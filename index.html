@@ -579,7 +579,7 @@
   <script>
     // Bakım modunu açmak için: true
     // Bakım modunu kapatıp siteyi açmak için: false
-    const IS_MAINTENANCE_MODE = true;
+    const IS_MAINTENANCE_MODE = false;
 
     if (IS_MAINTENANCE_MODE) {
       document.addEventListener("DOMContentLoaded", () => {
@@ -590,10 +590,22 @@
     }
   </script>
 
-  <!-- FIREBASE SDK & AUTH INTEGRATION -->
+  <!-- FIREBASE SDK, AUTH & FIRESTORE INTEGRATION -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+      getAuth, 
+      signInWithEmailAndPassword, 
+      createUserWithEmailAndPassword, 
+      signOut, 
+      onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+      getFirestore, 
+      doc, 
+      setDoc, 
+      getDoc 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyA0lZFiA-HcJ0CiEgSVvqUaJu0g9xIK7CQ",
@@ -606,19 +618,42 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    onAuthStateChanged(auth, (user) => {
+    // OTURUM VE YÖNETİCİ ONAYI KONTROLÜ
+    onAuthStateChanged(auth, async (user) => {
       if (typeof IS_MAINTENANCE_MODE !== 'undefined' && IS_MAINTENANCE_MODE) return;
 
       if (user) {
-        document.getElementById('landing-page').classList.add('hidden');
-        document.getElementById('dashboard').classList.remove('hidden');
+        try {
+          // Kullanıcının veritabanındaki onay durumunu sorgula
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+
+          if (userDoc.exists() && userDoc.data().approved === true) {
+            // ONAYLI KULLANICI: İçeriye al
+            document.getElementById('landing-page').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+          } else {
+            // ONAYSIZ KULLANICI: Oturumu kapat ve uyarı ver
+            await signOut(auth);
+            openAuthModal('login');
+            const errorDiv = document.getElementById('loginError');
+            errorDiv.innerText = "Hesabınız henüz yönetici onayından geçmemiştir. Onay verildikten sonra giriş yapabilirsiniz.";
+            errorDiv.style.display = "block";
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('landing-page').classList.remove('hidden');
+          }
+        } catch (error) {
+          console.error("Onay kontrolü hatası:", error);
+          await signOut(auth);
+        }
       } else {
         document.getElementById('dashboard').classList.add('hidden');
         document.getElementById('landing-page').classList.remove('hidden');
       }
     });
 
+    // KULLANICI GİRİŞİ
     window.handleLogin = async function(e) {
       e.preventDefault();
       if (typeof IS_MAINTENANCE_MODE !== 'undefined' && IS_MAINTENANCE_MODE) return;
@@ -633,14 +668,14 @@
 
       try {
         await signInWithEmailAndPassword(auth, email, pass);
-        closeAuthModal();
+        // Giriş başarılı olursa onay kontrolü onAuthStateChanged içinde otomatik çalışır.
       } catch (err) {
         errorDiv.innerText = "Giriş başarısız: E-posta veya şifre hatalı.";
         errorDiv.style.display = "block";
       }
     };
 
-    // KAYIT OLUNDUKTAN SONRA OTOMATİK OTURUMU KAPATIP GİRİŞ EKRANINA YÖNLENDİRİR
+    // YENİ KAYIT (Yönetici Onaylı)
     window.handleRegister = async function(e) {
       e.preventDefault();
       if (typeof IS_MAINTENANCE_MODE !== 'undefined' && IS_MAINTENANCE_MODE) return;
@@ -651,17 +686,27 @@
 
       errorDiv.style.display = "none";
       try {
-        await createUserWithEmailAndPassword(auth, email, pass);
-        // Otomatik girişi engellemek için oturumu hemen kapatıyoruz
+        const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+        const user = userCredential.user;
+
+        // Kullanıcıyı veritabanına "approved: false" olarak kaydediyoruz
+        await setDoc(doc(db, "users", user.uid), {
+          email: email,
+          approved: false,
+          createdAt: new Date().toISOString()
+        });
+
+        // Otomatik girişi engellemek için oturumu kapatıyoruz
         await signOut(auth);
         
-        // Formları sıfırla ve Giriş ekranına geçiş yaptır
+        // Form alanlarını temizle
         document.getElementById('regEmail').value = "";
         document.getElementById('regPassword').value = "";
         
+        // Giriş modala geç ve bilgi mesajı göster
         openAuthModal('login');
         const successDiv = document.getElementById('loginSuccess');
-        successDiv.innerText = "Kaydınız başarıyla oluşturuldu! Lütfen giriş yapın.";
+        successDiv.innerText = "Kayıt talebiniz alındı! Yönetici onayından sonra giriş yapabilirsiniz.";
         successDiv.style.display = "block";
       } catch (err) {
         errorDiv.innerText = "Kayıt oluşturulamadı: " + err.message;
@@ -669,92 +714,10 @@
       }
     };
 
+    // ÇIKIŞ YAP
     window.logout = function() {
       signOut(auth);
     };
-  </script>
-
-  <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebarOverlay');
-      sidebar.classList.toggle('open');
-      overlay.classList.toggle('active');
-    }
-
-    function toggleAccordion(id, element) {
-      const body = document.getElementById(id);
-      body.classList.toggle('open');
-      element.classList.toggle('active');
-    }
-
-    function openAuthModal(type) {
-      if (typeof IS_MAINTENANCE_MODE !== 'undefined' && IS_MAINTENANCE_MODE) return;
-
-      document.getElementById('auth-modal').classList.remove('hidden');
-      document.getElementById('loginError').style.display = "none";
-      document.getElementById('loginSuccess').style.display = "none";
-      document.getElementById('regError').style.display = "none";
-      
-      if (type === 'login') {
-        document.getElementById('login-form').classList.remove('hidden');
-        document.getElementById('register-form').classList.add('hidden');
-      } else {
-        document.getElementById('login-form').classList.add('hidden');
-        document.getElementById('register-form').classList.remove('hidden');
-      }
-    }
-
-    function closeAuthModal() {
-      document.getElementById('auth-modal').classList.add('hidden');
-    }
-
-    function loadCourse(element, title, driveId) {
-      document.querySelectorAll('.course-item').forEach(item => item.classList.remove('active'));
-      element.classList.add('active');
-      
-      document.getElementById('activeCourseTitle').innerText = title;
-      document.getElementById('welcomeView').classList.add('hidden');
-      document.getElementById('pdfContainer').classList.remove('hidden');
-
-      const embedUrl = `https://drive.google.com/file/d/${driveId}/preview`;
-      document.getElementById('pdfFrame').src = embedUrl;
-
-      if (window.innerWidth <= 768) {
-        toggleSidebar();
-      }
-    }
-
-    function showWelcomeView() {
-      document.getElementById('activeCourseTitle').innerText = 'Ana Panel';
-      document.getElementById('pdfContainer').classList.add('hidden');
-      document.getElementById('welcomeView').classList.remove('hidden');
-      document.querySelectorAll('.course-item').forEach(item => item.classList.remove('active'));
-      
-      if (window.innerWidth <= 768) {
-        const sidebar = document.getElementById('sidebar');
-        if (sidebar.classList.contains('open')) toggleSidebar();
-      }
-    }
-
-    /* KISAYOL VE EKRAN GÖRÜNTÜSÜ TUŞLARINI ENGELLEME SCRIPT'I */
-    document.addEventListener('keydown', function (e) {
-      // F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S, Ctrl+P, Ctrl+C engelleme
-      if (
-        e.keyCode === 123 || 
-        (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
-        (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 80 || e.keyCode === 67))
-      ) {
-        e.preventDefault();
-        return false;
-      }
-      
-      // PrintScreen tuşu basıldığında panoyu temizleme
-      if (e.key === 'PrintScreen' || e.keyCode === 44) {
-        navigator.clipboard.writeText('');
-        alert('Ekran görüntüsü alma bu sayfada kısıtlanmıştır.');
-      }
-    });
   </script>
 </body>
 </html>
