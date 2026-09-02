@@ -683,9 +683,15 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Kayıt sırasında onAuthStateChanged dinleyicisinin mesajı ezmesini önleyen bayrak
+    let isRegistering = false;
+
     // OTURUM KONTROLÜ
     onAuthStateChanged(auth, async (user) => {
       if (window.IS_MAINTENANCE_MODE) return;
+
+      // Kayıt işlemi yapılıyorsa onay mesajının ezilmesini engelle
+      if (isRegistering) return;
 
       if (user) {
         try {
@@ -740,6 +746,58 @@
         }
       }
     }
+
+    // KAYIT İŞLEMİ
+    async function handleRegister(e) {
+      if (e) e.preventDefault();
+
+      const emailInput = document.getElementById('regEmail');
+      const passInput = document.getElementById('regPassword');
+      const errorDiv = document.getElementById('regError');
+
+      if (!emailInput || !passInput) return;
+
+      if (errorDiv) errorDiv.style.display = "none";
+
+      // Oturum dinleyicisini geçici olarak pasife al
+      isRegistering = true;
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, emailInput.value, passInput.value);
+        const user = userCredential.user;
+
+        await setDoc(doc(db, "users", user.uid), {
+          email: emailInput.value,
+          approved: false,
+          createdAt: new Date().toISOString()
+        });
+
+        await signOut(auth);
+        
+        emailInput.value = "";
+        passInput.value = "";
+        
+        if (typeof window.openAuthModal === 'function') window.openAuthModal('login');
+        
+        const loginError = document.getElementById('loginError');
+        if (loginError) loginError.style.display = "none";
+
+        const successDiv = document.getElementById('loginSuccess');
+        if (successDiv) {
+          successDiv.innerText = "Kayıt talebiniz alındı! Yönetici onayından sonra giriş yapabilirsiniz.";
+          successDiv.style.display = "block";
+        }
+      } catch (err) {
+        if (errorDiv) {
+          errorDiv.innerText = "Kayıt oluşturulamadı: " + err.message;
+          errorDiv.style.display = "block";
+        }
+      } finally {
+        // İşlem bittiğinde bayrağı tekrar sıfırla
+        isRegistering = false;
+      }
+    }
+    
 
     // KAYIT İŞLEMİ
     async function handleRegister(e) {
